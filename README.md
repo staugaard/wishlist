@@ -47,3 +47,5 @@ Working agreements for AI-assisted development are in [CLAUDE.md](CLAUDE.md).
 GitHub Actions runs `pnpm check` on every PR (`.github/workflows/ci.yml`).
 Deploys are Workers Builds' job, not CI's — no Cloudflare secrets live in
 GitHub.
+
+Production: https://wishlist.staugaard.workers.dev
