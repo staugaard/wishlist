@@ -15,6 +15,20 @@
       "when": 1786597391593,
       "tag": "0001_crazy_morgan_stark",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1786599164657,
+      "tag": "0002_legal_phantom_reporter",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "6",
+      "when": 1786600118832,
+      "tag": "0003_real_praxagora",
+      "breakpoints": true
     }
   ]
 }

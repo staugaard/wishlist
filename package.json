@@ -8,7 +8,7 @@
     "preview": "vite preview",
     "deploy": "pnpm build && wrangler deploy",
     "check": "pnpm typecheck && pnpm lint && pnpm test && pnpm build",
-    "typecheck": "wrangler types --env-interface CloudflareBindings && tsc --noEmit",
+    "typecheck": "wrangler types --env-interface CloudflareBindings && tsc --noEmit && tsc -p tsconfig.client.json",
     "cf-typegen": "wrangler types --env-interface CloudflareBindings",
     "lint": "biome check .",
     "format": "biome check --write .",

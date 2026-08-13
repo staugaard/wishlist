@@ -50,6 +50,20 @@ export const lists = sqliteTable(
   ],
 );
 
+export const otpCodes = sqliteTable("otp_codes", {
+  // Lowercase; one active code per address.
+  email: text("email").primaryKey(),
+  // SHA-256 of "<email>:<code>" — never the raw code.
+  codeHash: text("code_hash").notNull(),
+  expiresAt: integer("expires_at", { mode: "timestamp" }).notNull(),
+  // Wrong guesses against the current unexpired window. NOT reset by a
+  // resend — that would multiply the brute-force budget.
+  attempts: integer("attempts").notNull().default(0),
+  // Emails sent in the current window (cap 3 while unexpired).
+  sends: integer("sends").notNull().default(1),
+  createdAt: integer("created_at", { mode: "timestamp" }).notNull(),
+});
+
 export const items = sqliteTable(
   "items",
   {

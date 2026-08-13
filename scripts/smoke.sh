@@ -42,5 +42,6 @@ for title in "Wool socks, any colour" "Cast iron skillet, 26 cm" "Speckled ceram
   echo "$DEMO_HTML" | grep -q "$title" || fail "demo list missing item: $title"
 done
 curl -s "http://localhost:$PORT/l/nope00000000000000000x" | grep -q "This list isn" || fail "404 page did not render"
+curl -sf "http://localhost:$PORT/login" | grep -q "What&#39;s your email?" || fail "login page did not render"
 
 echo "smoke OK (/, /healthz, demo list, 404, D1 round-trip)"
