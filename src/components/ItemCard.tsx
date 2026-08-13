@@ -34,11 +34,7 @@ export function ItemCard({
           <PriorityStamp />
         </div>
       ) : null}
-      <ItemPhoto
-        src={image ?? undefined}
-        alt={title}
-        height={image ? 150 : 96}
-      />
+      {image ? <ItemPhoto src={image} alt={title} height={150} /> : null}
       <h2 class="hn-card__title">{title}</h2>
       {price ? <p class="hn-card__price">{price}</p> : null}
       {note ? (

@@ -288,6 +288,13 @@ a:hover {
   letter-spacing: -0.015em;
   margin: 14px 0 0;
 }
+/* Photo-less cards start at the title — no empty slot on the giver page
+   (sanctioned deviation, 2026-08-14: real lists made the placeholder read
+   as clutter, and the handoff already calls photo-less items fully normal). */
+.hn-card__title:first-child,
+.hn-card__stamp + .hn-card__title {
+  margin-top: 0;
+}
 .hn-card__price {
   font: 400 var(--size-meta) / 1 var(--font-ui);
   color: var(--ink-soft);

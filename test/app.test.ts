@@ -101,6 +101,16 @@ describe("public list page /l/:slug", () => {
     expect(html.match(/hn-stamp\b/g)).toHaveLength(1);
   });
 
+  it("photo-less cards render no photo slot at all", async () => {
+    const { slug } = await makeList({
+      items: [{ title: "Hammock" }],
+    });
+    const { html } = await getPage(`/l/${slug}`);
+    expect(html).toContain("Hammock");
+    expect(html).not.toContain("hn-photo--empty");
+    expect(html).not.toContain("no photo");
+  });
+
   it("escapes HTML in user content", async () => {
     const { slug } = await makeList({
       items: [{ title: '<script>alert("x")</script>', note: "<b>bold</b>" }],
