@@ -240,6 +240,53 @@ describe("enrichItem", () => {
     expect(item?.price).toBe("About $120");
   });
 
+  it("clearing a polled-in price is a deliberate edit and persists", async () => {
+    const { itemId, userId } = await makeItem();
+    await enrichItem(
+      env,
+      itemId,
+      "https://shop.example.com/p/1",
+      "shop.example.com",
+      shopFetch(),
+    );
+    const sessionId = `clearprice${itemId}`;
+    await db.insert(schema.sessions).values({
+      id: sessionId,
+      userId,
+      createdAt: now,
+      expiresAt: new Date(Date.now() + 86_400_000),
+    });
+    // The poll swapped the price in AND moved the baseline with it; the
+    // owner then cleared the field.
+    const body = new URLSearchParams({
+      title: "A Lovely Teapot",
+      initialTitle: "A Lovely Teapot",
+      price: "",
+      initialPrice: "About $120",
+      note: "",
+      url: "https://shop.example.com/p/1",
+    });
+    const res = await exports.default.fetch(
+      `http://example.com/items/${itemId}`,
+      {
+        method: "POST",
+        body: body.toString(),
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+          Origin: "http://example.com",
+          Cookie: `session=${sessionId}`,
+        },
+        redirect: "manual",
+      },
+    );
+    expect(res.status).toBe(302);
+    const item = await db.query.items.findFirst({
+      where: eq(schema.items.id, itemId),
+    });
+    expect(item?.price).toBeNull();
+    expect(item?.title).toBe("A Lovely Teapot");
+  });
+
   it("cleanup removes the stored image", async () => {
     const { itemId } = await makeItem();
     await enrichItem(

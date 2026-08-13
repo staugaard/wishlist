@@ -267,10 +267,13 @@ owner.post("/items/:id", async (c) => {
     priority: form.get("priority") === "on",
     updatedAt: new Date(),
   };
-  if (title && title !== formStr(form, "initialTitle", 200)) {
+  // Forms rendered before the baseline fields existed fall back to
+  // always-write (legacy semantics).
+  const hasBaseline = form.has("initialTitle");
+  if (title && (!hasBaseline || title !== formStr(form, "initialTitle", 200))) {
     changes.title = title;
   }
-  if (price !== formStr(form, "initialPrice", 100)) {
+  if (!hasBaseline || price !== formStr(form, "initialPrice", 100)) {
     changes.price = price || null;
   }
   await db

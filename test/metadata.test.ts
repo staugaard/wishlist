@@ -77,10 +77,33 @@ describe("fetchMetadata", () => {
     expect(await fetchMetadata(PAGE, failing)).toEqual({});
   });
 
-  it("parses head metadata even when the body exceeds the read cap", async () => {
-    const html = `<meta property="og:title" content="Early Bird" />${"x".repeat(600 * 1024)}`;
+  it("enforces the read cap: early tags parse, tags beyond 500KB do not", async () => {
+    const html = `<meta property="og:title" content="Early Bird" />${"x".repeat(600 * 1024)}<meta property="og:image" content="https://cdn.example.com/late.png" />`;
     const meta = await fetchMetadata(PAGE, stubFetch(html));
     expect(meta.title).toBe("Early Bird");
+    // The image tag sits past the cap and must NOT have been parsed.
+    expect(meta.imageUrl).toBeUndefined();
+  });
+
+  it("resolves relative images against the post-redirect final URL", async () => {
+    const redirected = (async () => {
+      const res = new Response(
+        '<meta property="og:image" content="/pics/kettle.jpg" />',
+        {
+          headers: { "Content-Type": "text/html" },
+        },
+      );
+      // Simulate fetch's redirect-following: Response.url is the FINAL url.
+      Object.defineProperty(res, "url", {
+        value: "https://real-shop.example.net/product/9",
+      });
+      return res;
+    }) as typeof fetch;
+    const meta = await fetchMetadata(
+      "https://redirector.example.com/x",
+      redirected,
+    );
+    expect(meta.imageUrl).toBe("https://real-shop.example.net/pics/kettle.jpg");
   });
 
   it("refuses unsafe image URLs", async () => {

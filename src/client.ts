@@ -49,6 +49,12 @@ if (enrichForm) {
     input.classList.add("hn-settle");
     input.value = value;
     initial[name] = value;
+    // Move the server-side baseline too: after a swap, clearing or editing
+    // this field is a deliberate change and must be persisted by Done.
+    const hidden = enrichForm.querySelector<HTMLInputElement>(
+      `input[name="initial${name.charAt(0).toUpperCase()}${name.slice(1)}"]`,
+    );
+    if (hidden) hidden.value = value;
   };
 
   let tries = 0;
