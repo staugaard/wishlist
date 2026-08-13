@@ -17,7 +17,11 @@ app.use(rejectCrossSite);
 
 app.get("/", async (c) => {
   const user = await currentUser(c);
-  if (!user) return c.render(<HomePage />, { title: "Hinted" });
+  if (!user)
+    return c.render(<HomePage />, {
+      title: "Hinted",
+      description: "A place for family wishlists.",
+    });
   const db = createDb(c.env.DB);
   const rows = await db
     .select({
