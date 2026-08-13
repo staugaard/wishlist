@@ -30,10 +30,9 @@ The giver experience should feel like browsing a tiny, personal shop window that
 
 ## Core objects and flows
 
-- **Family space** — the circle (a family, a friend group). Holds people and their lists. Joined by invite link.
-- **Person / list** — each person has one or more lists. A list has a name, an optional occasion *label* (plain text — carries no styling), and items.
+- **User / list** — a signed-in user owns one or more lists. A list has a name, an optional occasion *label* (plain text — carries no styling), and items.
 - **Item** — title, optional image, optional price, optional URL, optional note, priority flag. Item cards are the app's atomic visual unit, in two renderings: the owner's editable card and the giver's read-only card.
-- **Share link** — an unguessable URL granting view access. The link IS the access model; there are no viewer accounts and no viewer actions.
+- **The list's URL is public.** Every list lives at an unguessable URL; anyone who has it can view. There is no separate share-token entity, no revocation machinery, no viewer accounts, and no viewer actions — sharing a list means copying its address. (Grouping concepts like a shared family space are explicitly out of scope; if they ever return, they're a browsing convenience, not an access model.)
 
 Key flows to design:
 1. Owner: sign in → my lists → open a list → paste URL → item card auto-fills → tweak → done.
