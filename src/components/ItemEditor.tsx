@@ -1,19 +1,37 @@
 import type { items } from "../db/schema";
+import { itemImageSrc } from "../lib/itemImage";
 import { ItemPhoto } from "./ItemPhoto";
 
 type Item = typeof items.$inferSelect;
 
 // The expanded row — the only editing surface (no dialog, no side panel).
-export function ItemEditor({ item, listId }: { item: Item; listId: number }) {
+export function ItemEditor({
+  item,
+  listId,
+  enrich = false,
+}: {
+  item: Item;
+  listId: number;
+  /** Just pasted from a URL: the client polls for settling metadata. */
+  enrich?: boolean;
+}) {
   return (
-    <form method="post" action={`/items/${item.id}`} class="hn-edit">
+    <form
+      method="post"
+      action={`/items/${item.id}`}
+      class="hn-edit"
+      data-enrich={enrich ? String(item.id) : undefined}
+    >
       <input type="hidden" name="list" value={String(listId)} />
+      {/* The update route only writes title/price when they differ from
+          these — a Done click mid-enrichment must not resurrect stale
+          SSR values over freshly enriched ones. */}
+      <input type="hidden" name="initialTitle" value={item.title} />
+      <input type="hidden" name="initialPrice" value={item.price ?? ""} />
       <div class="hn-edit__grid">
-        <ItemPhoto
-          src={item.imageUrl ?? undefined}
-          alt={item.title}
-          height={80}
-        />
+        <div data-photo-slot="">
+          <ItemPhoto src={itemImageSrc(item)} alt={item.title} height={80} />
+        </div>
         <div class="hn-edit__fields">
           <label class="hn-field">
             <span class="hn-field__label">What is it</span>

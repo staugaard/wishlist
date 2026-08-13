@@ -1,6 +1,8 @@
 import { and, asc, eq, sql } from "drizzle-orm";
 import { Hono } from "hono";
 import { createDb, type Db, schema } from "../db";
+import { enrichItem } from "../lib/enrich";
+import { deleteItemImages } from "../lib/images";
 import { requireOwner, type SessionUser } from "../lib/session";
 import { newSlug } from "../lib/slug";
 import { safeHttpUrl } from "../lib/url";
@@ -104,6 +106,7 @@ owner.get("/lists/:id", async (c) => {
   const openItemId = c.req.query("item")
     ? Number(c.req.query("item"))
     : undefined;
+  const enriching = c.req.query("new") === "1";
   const shareUrl = `${new URL(c.req.url).origin}/l/${list.slug}`;
   return c.render(
     <EditorPage
@@ -112,6 +115,7 @@ owner.get("/lists/:id", async (c) => {
       list={list}
       listItems={listItems}
       openItemId={openItemId}
+      enriching={enriching}
       shareUrl={shareUrl}
     />,
     { title: `${list.name} · Hinted` },
@@ -171,7 +175,16 @@ owner.post("/lists/:id/delete", async (c) => {
   const db = createDb(c.env.DB);
   const list = await ownedList(db, user.id, Number(c.req.param("id")));
   if (!list) return c.notFound();
+  const doomedItems = await db
+    .select({ id: schema.items.id })
+    .from(schema.items)
+    .where(eq(schema.items.listId, list.id));
   await db.delete(schema.lists).where(eq(schema.lists.id, list.id));
+  c.executionCtx.waitUntil(
+    Promise.all(doomedItems.map((i) => deleteItemImages(c.env, i.id))).then(
+      () => {},
+    ),
+  );
   return c.redirect("/");
 });
 
@@ -194,18 +207,47 @@ owner.post("/lists/:id/items", async (c) => {
     .from(schema.items)
     .where(eq(schema.items.listId, list.id));
   const maxPos = agg?.maxPos ?? -1;
+  const hostPlaceholder = href ? new URL(href).hostname : input;
   const [created] = await db
     .insert(schema.items)
     .values({
       listId: list.id,
-      title: href ? new URL(href).hostname : input,
+      title: hostPlaceholder,
       url: href ?? null,
       position: maxPos + 1,
       createdAt: now,
       updatedAt: now,
     })
     .returning({ id: schema.items.id });
+  if (href && created) {
+    // The magic paste: the row is already real; metadata settles in behind
+    // the response (fill-if-untouched — see src/lib/enrich.ts).
+    c.executionCtx.waitUntil(
+      enrichItem(c.env, created.id, href, hostPlaceholder),
+    );
+    return c.redirect(`/lists/${list.id}?item=${created.id}&new=1`);
+  }
   return c.redirect(`/lists/${list.id}?item=${created?.id}`);
+});
+
+// One segment, whole-segment regex param: Hono cannot mix :param{...} with
+// a literal suffix, so the ".json" lives inside the pattern.
+owner.get("/items/:file{[0-9]+\\.json}", async (c) => {
+  const user = c.get("user");
+  const db = createDb(c.env.DB);
+  const item = await ownedItem(
+    db,
+    user.id,
+    Number.parseInt(c.req.param("file"), 10),
+  );
+  if (!item) return c.notFound();
+  return c.json({
+    title: item.title,
+    note: item.note,
+    price: item.price,
+    url: item.url,
+    imageKey: item.imageKey,
+  });
 });
 
 owner.post("/items/:id", async (c) => {
@@ -215,16 +257,28 @@ owner.post("/items/:id", async (c) => {
   if (!item) return c.notFound();
   const form = await c.req.formData();
   const title = formStr(form, "title", 200);
+  const price = formStr(form, "price", 100);
+  // Only write enrichable fields the owner actually changed: a Done click
+  // that races background enrichment must not resurrect the stale SSR
+  // values it was rendered with (initialTitle/initialPrice hidden fields).
+  const changes: Partial<typeof schema.items.$inferInsert> = {
+    note: formStr(form, "note", 1000) || null,
+    url: formStr(form, "url", 2048) || null,
+    priority: form.get("priority") === "on",
+    updatedAt: new Date(),
+  };
+  // Forms rendered before the baseline fields existed fall back to
+  // always-write (legacy semantics).
+  const hasBaseline = form.has("initialTitle");
+  if (title && (!hasBaseline || title !== formStr(form, "initialTitle", 200))) {
+    changes.title = title;
+  }
+  if (!hasBaseline || price !== formStr(form, "initialPrice", 100)) {
+    changes.price = price || null;
+  }
   await db
     .update(schema.items)
-    .set({
-      title: title || item.title,
-      note: formStr(form, "note", 1000) || null,
-      price: formStr(form, "price", 100) || null,
-      url: formStr(form, "url", 2048) || null,
-      priority: form.get("priority") === "on",
-      updatedAt: new Date(),
-    })
+    .set(changes)
     .where(eq(schema.items.id, item.id));
   return c.redirect(`/lists/${item.listId}`);
 });
@@ -235,6 +289,7 @@ owner.post("/items/:id/delete", async (c) => {
   const item = await ownedItem(db, user.id, Number(c.req.param("id")));
   if (!item) return c.notFound();
   await db.delete(schema.items).where(eq(schema.items.id, item.id));
+  c.executionCtx.waitUntil(deleteItemImages(c.env, item.id));
   return c.redirect(`/lists/${item.listId}`);
 });
 

@@ -1,6 +1,7 @@
 import { ItemCard } from "../components/ItemCard";
 import { Wordmark } from "../components/Wordmark";
 import type { items, lists, users } from "../db/schema";
+import { itemImageSrc } from "../lib/itemImage";
 
 type List = typeof lists.$inferSelect;
 type Item = typeof items.$inferSelect;
@@ -39,7 +40,7 @@ export function GiverListPage({
             price={item.price}
             note={item.note}
             url={item.url}
-            image={item.imageUrl}
+            image={itemImageSrc(item)}
             priority={item.priority}
           />
         ))}

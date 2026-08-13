@@ -72,6 +72,24 @@ app.get("/l/:slug", async (c) => {
   );
 });
 
+// Our stored copy of a product photo. Public (giver pages embed these);
+// keys are content-addressed so immutable caching is safe.
+const IMG_KEY = /^items\/\d+\/[a-f0-9]{16}\.(jpeg|png|webp|gif|avif)$/;
+app.get("/img/*", async (c) => {
+  const key = c.req.path.slice("/img/".length);
+  if (!IMG_KEY.test(key)) return c.notFound();
+  const object = await c.env.IMAGES.get(key);
+  if (!object) return c.notFound();
+  return new Response(object.body, {
+    headers: {
+      "Content-Type":
+        object.httpMetadata?.contentType ?? "application/octet-stream",
+      "Cache-Control": "public, max-age=31536000, immutable",
+      "X-Robots-Tag": "noindex",
+    },
+  });
+});
+
 // Proves the full loop: migrations → D1 binding → query.
 app.get("/healthz", async (c) => {
   const db = createDb(c.env.DB);

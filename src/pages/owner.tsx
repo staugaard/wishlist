@@ -118,6 +118,7 @@ export function EditorPage({
   list,
   listItems,
   openItemId,
+  enriching = false,
   shareUrl,
 }: {
   user: User;
@@ -125,6 +126,7 @@ export function EditorPage({
   list: List;
   listItems: Item[];
   openItemId?: number;
+  enriching?: boolean;
   shareUrl: string;
 }) {
   const metaParts = [
@@ -160,7 +162,7 @@ export function EditorPage({
         <main>
           {listItems.map((item) =>
             item.id === openItemId ? (
-              <ItemEditor item={item} listId={list.id} />
+              <ItemEditor item={item} listId={list.id} enrich={enriching} />
             ) : (
               <ItemRow item={item} listId={list.id} />
             ),

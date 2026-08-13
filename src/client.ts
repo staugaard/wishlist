@@ -1,5 +1,7 @@
-// The app's entire client-side JS: the copy-share-link sprinkle.
-// Everything else is server-rendered HTML and CSS.
+// The app's entire client-side JS: the copy-share-link sprinkle and the
+// settle-in poll for a just-pasted item. Everything else is server-rendered.
+
+// — Copy share link —
 document.addEventListener("click", (event) => {
   const button = (event.target as Element | null)?.closest<HTMLButtonElement>(
     "[data-copy]",
@@ -21,3 +23,72 @@ document.addEventListener("click", (event) => {
       button.textContent = url;
     });
 });
+
+// — The magic paste settles in —
+// The row is real from the first frame; we only swap values into fields the
+// owner hasn't touched. No spinners, no skeletons (design law).
+const enrichForm = document.querySelector<HTMLFormElement>("form[data-enrich]");
+if (enrichForm) {
+  const itemId = enrichForm.dataset.enrich;
+  const fields: Record<string, HTMLInputElement | null> = {
+    title: enrichForm.querySelector('input[name="title"]'),
+    price: enrichForm.querySelector('input[name="price"]'),
+  };
+  const initial: Record<string, string> = {};
+  const touched = new Set<string>();
+  for (const [name, input] of Object.entries(fields)) {
+    if (!input) continue;
+    initial[name] = input.value;
+    input.addEventListener("input", () => touched.add(name), { once: true });
+  }
+
+  const swapValue = (name: string, value: string | null) => {
+    const input = fields[name];
+    if (!input || !value || touched.has(name) || input.value !== initial[name])
+      return;
+    input.classList.add("hn-settle");
+    input.value = value;
+    initial[name] = value;
+    // Move the server-side baseline too: after a swap, clearing or editing
+    // this field is a deliberate change and must be persisted by Done.
+    const hidden = enrichForm.querySelector<HTMLInputElement>(
+      `input[name="initial${name.charAt(0).toUpperCase()}${name.slice(1)}"]`,
+    );
+    if (hidden) hidden.value = value;
+  };
+
+  let tries = 0;
+  const poll = async () => {
+    tries += 1;
+    try {
+      const res = await fetch(`/items/${itemId}.json`);
+      if (res.ok) {
+        const data = (await res.json()) as {
+          title: string;
+          price: string | null;
+          imageKey: string | null;
+        };
+        swapValue("title", data.title);
+        swapValue("price", data.price);
+        if (data.imageKey) {
+          const slot = enrichForm.querySelector("[data-photo-slot]");
+          if (slot && !slot.querySelector("img")) {
+            const img = document.createElement("img");
+            img.className = "hn-photo hn-settle";
+            img.src = `/img/${data.imageKey}`;
+            img.alt = "";
+            img.style.height = "80px";
+            img.style.objectFit = "cover";
+            slot.replaceChildren(img);
+          }
+        }
+        // Everything that can settle has settled — stop early.
+        if (data.price && data.imageKey) return;
+      }
+    } catch {
+      // Transient — the next tick may succeed; values also appear on reload.
+    }
+    if (tries < 10) setTimeout(poll, 1000);
+  };
+  setTimeout(poll, 800);
+}
