@@ -17,6 +17,7 @@
   "workers_dev": true,
   "preview_urls": true,
   "send_email": [{ "name": "EMAIL" }],
+  "r2_buckets": [{ "binding": "IMAGES", "bucket_name": "wishlist-images" }],
   "observability": {
     "enabled": true
   }

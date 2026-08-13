@@ -76,8 +76,10 @@ export const items = sqliteTable(
     // Display text ("About 649 kr"), never numeric.
     price: text("price"),
     url: text("url"),
-    // External URL in Phase 1; Phase 3 adds R2-backed storage.
+    // Source-provenance URL (and legacy fallback); our stored copy wins.
     imageUrl: text("image_url"),
+    // R2 object key of our cached copy — preferred over imageUrl when set.
+    imageKey: text("image_key"),
     priority: integer("priority", { mode: "boolean" }).notNull().default(false),
     position: integer("position").notNull().default(0),
     createdAt: integer("created_at", { mode: "timestamp" }).notNull(),

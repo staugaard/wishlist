@@ -1,4 +1,5 @@
 import type { items } from "../db/schema";
+import { itemImageSrc } from "../lib/itemImage";
 import { safeHttpUrl } from "../lib/url";
 import { ItemPhoto } from "./ItemPhoto";
 import { PriorityStamp } from "./PriorityStamp";
@@ -22,11 +23,7 @@ export function ItemRow({ item, listId }: { item: Item; listId: number }) {
       <span class="hn-row__grip" aria-hidden="true">
         ⋮⋮
       </span>
-      <ItemPhoto
-        src={item.imageUrl ?? undefined}
-        alt={item.title}
-        height={72}
-      />
+      <ItemPhoto src={itemImageSrc(item)} alt={item.title} height={72} />
       <a class="hn-row__open" href={`/lists/${listId}?item=${item.id}`}>
         <span class="hn-row__title">{item.title}</span>
         {rowMeta(item) ? (
