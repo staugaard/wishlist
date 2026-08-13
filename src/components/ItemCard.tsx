@@ -39,7 +39,7 @@ export function ItemCard({
         alt={title}
         height={image ? 150 : 96}
       />
-      <h3 class="hn-card__title">{title}</h3>
+      <h2 class="hn-card__title">{title}</h2>
       {price ? <p class="hn-card__price">{price}</p> : null}
       {note ? (
         <div class="hn-card__note">

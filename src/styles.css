@@ -266,7 +266,9 @@ a:hover {
 .hn-photo--empty .hn-photo__label {
   font: 300 30px / 1.1 var(--font-display);
   letter-spacing: 0;
-  color: var(--ink-faint);
+  /* --ink-soft, not --ink-faint: the faint/sunk pairing misses AA large-text
+     contrast in both themes (Lighthouse-verified). */
+  color: var(--ink-soft);
   text-transform: none;
   padding: 0 4px;
 }

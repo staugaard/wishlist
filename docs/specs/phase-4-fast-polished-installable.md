@@ -17,7 +17,7 @@
 | Empty giver page | A list with zero items shows the header + one line in the handoff voice: "Nothing here yet — check back soon." | Currently it's just header+closing line, which reads like a bug |
 | Copy pass | Audit every user-facing string against the handoff's voice rules (plainspoken, no exclamation marks, never "successfully"); fix drift; add `<meta name="description">` to the giver page (list intro or a neutral line) and proper `theme-color` metas for both schemes | Words are part of the design system |
 | Accessibility pass | Verify (and fix where needed): landmark structure, heading order, focus order incl. the editor's autofocus/return, labels on icon-ish buttons (movers, grip is `aria-hidden`), form labels, 200%-text-zoom layout, `prefers-reduced-motion` (settle + any transition), contrast in both themes (designed-in; re-verify the toggle button itself) | AA was designed in; this is the proof pass |
-| Lighthouse | ≥ 95 in Performance / Accessibility / Best Practices / SEO on `/l/<demo>` (mobile emulation, production URL). Contingency if font swap causes CLS: add fallback font metrics (`size-adjust`) for Newsreader/Hanken | The roadmap's number, measured honestly against prod |
+| Lighthouse | ≥ 95 in Performance / Accessibility / Best Practices on `/l/<demo>` (mobile, production). **SEO is measured on `/`**: the giver page is deliberately `noindex` (Phase 1: public ≠ searchable), which caps Lighthouse's SEO category by design — the one "failing" audit is the product decision working. Contingency if font swap causes CLS: fallback font metrics | The roadmap's number, measured honestly against prod — including being honest about why one page can't score it |
 
 ## Implementation sketch
 
