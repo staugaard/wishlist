@@ -34,6 +34,9 @@ export function GiverListPage({
       </div>
       <hr class="hn-rule" />
       <main class="hn-cards">
+        {listItems.length === 0 ? (
+          <p class="hn-empty">Nothing here yet — check back soon.</p>
+        ) : null}
         {listItems.map((item) => (
           <ItemCard
             title={item.title}
@@ -48,6 +51,11 @@ export function GiverListPage({
       <p class="hn-closing">
         {name} keeps this list up to date. Nothing you do here is recorded —
         sort out who gives what in the family chat, as always.
+      </p>
+      <p class="hn-themerow">
+        <button class="hn-bar__quiet" type="button" data-theme-toggle>
+          Theme
+        </button>
       </p>
     </div>
   );

@@ -135,6 +135,12 @@
 html {
   color-scheme: light dark;
 }
+html[data-theme="light"] {
+  color-scheme: light;
+}
+html[data-theme="dark"] {
+  color-scheme: dark;
+}
 body {
   margin: 0;
   background: var(--paper);
@@ -786,4 +792,10 @@ a:hover {
   .hn-settle {
     animation: none;
   }
+}
+
+.hn-themerow {
+  text-align: center;
+  margin: 0;
+  padding: 0 22px 32px;
 }
