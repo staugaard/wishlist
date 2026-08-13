@@ -6,7 +6,12 @@
     "useIgnoreFile": true
   },
   "files": {
-    "includes": ["**", "!drizzle", "!worker-configuration.d.ts", "!docs/design/hinted"]
+    "includes": [
+      "**",
+      "!drizzle",
+      "!worker-configuration.d.ts",
+      "!docs/design/hinted"
+    ]
   },
   "formatter": {
     "enabled": true,
