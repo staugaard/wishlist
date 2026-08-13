@@ -10,7 +10,7 @@
 | Fonts | **Self-host** Newsreader + Hanken Grotesk as variable woff2 static assets, `font-display: swap`, immutable cache headers | The handoff flags the Google Fonts request as the slowest thing on an otherwise edge-rendered page; self-hosting also removes the only third-party request in the whole app (privacy) |
 | CSS delivery | One global stylesheet `src/styles.css` (ported tokens + component classes), loaded via the Vite `<Link>` helper; no per-route CSS | The whole design system is a few KB; splitting it is complexity with no payoff |
 | Dark theme | Tokens duplicated under `@media (prefers-color-scheme: dark)` guarded with `:root:not([data-theme="light"])`, plus the handoff's `[data-theme="dark"]` block | System preference works with zero JS in Phase 1; the manual toggle (Phase 4) just sets `data-theme` and already wins in both directions |
-| `app_meta` | Retire. New migration drops it; `/healthz` now counts `lists` instead | It existed only to prove the migration loop; real tables prove it better |
+| `app_meta` | Retire from code now; **drop the table in Phase 2's migration** (expand–contract: migrations run before deploy, so dropping it in the same release would break the currently-deployed `/healthz` during the deploy window and make rollback unsafe). `/healthz` now counts `lists` instead | It existed only to prove the migration loop; real tables prove it better |
 | `sessions` table | Created now (with `users`) even though auth lands in Phase 2 | Five lines now; keeps Phase 2 a pure-code change on an already-migrated schema |
 
 ## Schema (migration 0001)

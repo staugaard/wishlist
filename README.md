@@ -12,10 +12,14 @@ loops. No product features yet. Research and decisions: [`docs/tech-and-hosting-
 ```bash
 pnpm install
 pnpm db:migrate:local   # create/migrate the local D1 (.wrangler/state)
+pnpm db:seed            # demo list at /l/demolist0000000000000A
 pnpm dev                # http://localhost:5173 — real workerd, HMR
-pnpm check              # typecheck + lint + tests — the single gate
-pnpm smoke              # boots dev server, curls /, /healthz (D1 round-trip)
+pnpm check              # typecheck + lint + tests + build — the single gate
+pnpm smoke              # boots dev server, checks /, /healthz, the demo list
 ```
+
+Lists are public at unguessable URLs: `/l/<22-char-slug>`. The URL is the
+share model — no viewer accounts, no viewer actions.
 
 Working agreements for AI-assisted development are in [CLAUDE.md](CLAUDE.md).
 

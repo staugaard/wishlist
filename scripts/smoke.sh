@@ -9,6 +9,8 @@ PORT="${SMOKE_PORT:-8788}"
 LOG="$(mktemp "${TMPDIR:-/tmp}/wishlist-smoke.XXXXXX")"
 
 pnpm db:migrate:local >/dev/null
+pnpm db:seed >/dev/null
+DEMO_SLUG="demolist0000000000000A"
 
 pnpm exec vite dev --port "$PORT" --strictPort >"$LOG" 2>&1 &
 SERVER_PID=$!
@@ -32,8 +34,13 @@ fail() {
   exit 1
 }
 
-curl -sf "http://localhost:$PORT/" | grep -qi "wishlist" || fail "home page did not render"
+curl -sf "http://localhost:$PORT/" | grep -q "hn-wordmark" || fail "home page did not render"
 curl -sf "http://localhost:$PORT/healthz" | grep -q '"status":"ok"' || fail "healthz not ok"
 curl -sf "http://localhost:$PORT/healthz" | grep -q '"db":"ok"' || fail "db round-trip failed"
+DEMO_HTML="$(curl -sf "http://localhost:$PORT/l/$DEMO_SLUG")" || fail "demo list request failed"
+for title in "Wool socks, any colour" "Cast iron skillet, 26 cm" "Speckled ceramic mug" "A poetry collection" "Gardening gloves"; do
+  echo "$DEMO_HTML" | grep -q "$title" || fail "demo list missing item: $title"
+done
+curl -s "http://localhost:$PORT/l/nope00000000000000000x" | grep -q "This list isn" || fail "404 page did not render"
 
-echo "smoke OK (/, /healthz, D1 round-trip)"
+echo "smoke OK (/, /healthz, demo list, 404, D1 round-trip)"
