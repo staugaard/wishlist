@@ -12,6 +12,7 @@
       "migrations_dir": "drizzle"
     }
   ],
+  "routes": [{ "pattern": "wishlist.season4.app", "custom_domain": true }],
   "send_email": [{ "name": "EMAIL" }],
   "observability": {
     "enabled": true
