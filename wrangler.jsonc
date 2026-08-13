@@ -13,6 +13,9 @@
     }
   ],
   "routes": [{ "pattern": "wishlist.season4.app", "custom_domain": true }],
+  // Keep workers.dev alive alongside the custom domain — PR preview URLs depend on it.
+  "workers_dev": true,
+  "preview_urls": true,
   "send_email": [{ "name": "EMAIL" }],
   "observability": {
     "enabled": true
