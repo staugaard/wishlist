@@ -1,5 +1,5 @@
 import { and, eq, isNull } from "drizzle-orm";
-import { createDb, schema } from "../db";
+import { createDb, schema, touchListQuery } from "../db";
 import { storeItemImage } from "./images";
 import { fetchMetadata } from "./metadata";
 
@@ -16,41 +16,53 @@ export async function enrichItem(
 ): Promise<void> {
   try {
     const meta = await fetchMetadata(url, fetcher);
+    if (!meta.title && !meta.price && !meta.imageUrl) return;
     const db = createDb(env.DB);
     const now = new Date();
+    const item = await db.query.items.findFirst({
+      where: eq(schema.items.id, itemId),
+    });
+    if (!item) return;
 
+    // Each fill-if-untouched write commits atomically with a validator
+    // touch — a content change can never land without rolling the edge
+    // cache key. The touch is unconditional (harmless when the write
+    // matched nothing; the validator is monotonic).
     if (meta.title && meta.title !== hostPlaceholder) {
-      await db
-        .update(schema.items)
-        .set({ title: meta.title, updatedAt: now })
-        .where(
-          and(
-            eq(schema.items.id, itemId),
-            eq(schema.items.title, hostPlaceholder),
+      await db.batch([
+        db
+          .update(schema.items)
+          .set({ title: meta.title, updatedAt: now })
+          .where(
+            and(
+              eq(schema.items.id, itemId),
+              eq(schema.items.title, hostPlaceholder),
+            ),
           ),
-        );
+        touchListQuery(db, item.listId),
+      ]);
     }
     if (meta.price) {
-      await db
-        .update(schema.items)
-        .set({ price: meta.price, updatedAt: now })
-        .where(and(eq(schema.items.id, itemId), isNull(schema.items.price)));
+      await db.batch([
+        db
+          .update(schema.items)
+          .set({ price: meta.price, updatedAt: now })
+          .where(and(eq(schema.items.id, itemId), isNull(schema.items.price))),
+        touchListQuery(db, item.listId),
+      ]);
     }
-    if (meta.imageUrl) {
-      // Only bother storing if the slot is still open.
-      const current = await db.query.items.findFirst({
-        where: eq(schema.items.id, itemId),
-      });
-      if (current && current.imageKey == null) {
-        const key = await storeItemImage(env, itemId, meta.imageUrl, fetcher);
-        if (key) {
-          await db
+    if (meta.imageUrl && item.imageKey == null) {
+      const key = await storeItemImage(env, itemId, meta.imageUrl, fetcher);
+      if (key) {
+        await db.batch([
+          db
             .update(schema.items)
             .set({ imageKey: key, imageUrl: meta.imageUrl, updatedAt: now })
             .where(
               and(eq(schema.items.id, itemId), isNull(schema.items.imageKey)),
-            );
-        }
+            ),
+          touchListQuery(db, item.listId),
+        ]);
       }
     }
   } catch (err) {

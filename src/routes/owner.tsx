@@ -1,6 +1,6 @@
 import { and, asc, eq, sql } from "drizzle-orm";
 import { Hono } from "hono";
-import { createDb, type Db, schema } from "../db";
+import { createDb, type Db, schema, touchListQuery } from "../db";
 import { enrichItem } from "../lib/enrich";
 import { deleteItemImages } from "../lib/images";
 import { requireOwner, type SessionUser } from "../lib/session";
@@ -140,15 +140,19 @@ owner.post("/lists/:id", async (c) => {
   const form = await c.req.formData();
   const name = formStr(form, "name", 120);
   if (!name) return c.redirect(`/lists/${list.id}/settings`);
-  await db
-    .update(schema.lists)
-    .set({
-      name,
-      occasionLabel: formStr(form, "occasionLabel", 80) || null,
-      intro: formStr(form, "intro", 500) || null,
-      updatedAt: new Date(),
-    })
-    .where(eq(schema.lists.id, list.id));
+  // Content write and validator touch are one transaction: a half-applied
+  // pair could leave the edge cache stale for its full TTL.
+  await db.batch([
+    db
+      .update(schema.lists)
+      .set({
+        name,
+        occasionLabel: formStr(form, "occasionLabel", 80) || null,
+        intro: formStr(form, "intro", 500) || null,
+      })
+      .where(eq(schema.lists.id, list.id)),
+    touchListQuery(db, list.id),
+  ]);
   return c.redirect(`/lists/${list.id}`);
 });
 
@@ -208,17 +212,21 @@ owner.post("/lists/:id/items", async (c) => {
     .where(eq(schema.items.listId, list.id));
   const maxPos = agg?.maxPos ?? -1;
   const hostPlaceholder = href ? new URL(href).hostname : input;
-  const [created] = await db
-    .insert(schema.items)
-    .values({
-      listId: list.id,
-      title: hostPlaceholder,
-      url: href ?? null,
-      position: maxPos + 1,
-      createdAt: now,
-      updatedAt: now,
-    })
-    .returning({ id: schema.items.id });
+  const [insertRows] = await db.batch([
+    db
+      .insert(schema.items)
+      .values({
+        listId: list.id,
+        title: hostPlaceholder,
+        url: href ?? null,
+        position: maxPos + 1,
+        createdAt: now,
+        updatedAt: now,
+      })
+      .returning({ id: schema.items.id }),
+    touchListQuery(db, list.id),
+  ]);
+  const created = insertRows[0];
   if (href && created) {
     // The magic paste: the row is already real; metadata settles in behind
     // the response (fill-if-untouched — see src/lib/enrich.ts).
@@ -276,10 +284,10 @@ owner.post("/items/:id", async (c) => {
   if (!hasBaseline || price !== formStr(form, "initialPrice", 100)) {
     changes.price = price || null;
   }
-  await db
-    .update(schema.items)
-    .set(changes)
-    .where(eq(schema.items.id, item.id));
+  await db.batch([
+    db.update(schema.items).set(changes).where(eq(schema.items.id, item.id)),
+    touchListQuery(db, item.listId),
+  ]);
   return c.redirect(`/lists/${item.listId}`);
 });
 
@@ -288,7 +296,10 @@ owner.post("/items/:id/delete", async (c) => {
   const db = createDb(c.env.DB);
   const item = await ownedItem(db, user.id, Number(c.req.param("id")));
   if (!item) return c.notFound();
-  await db.delete(schema.items).where(eq(schema.items.id, item.id));
+  await db.batch([
+    db.delete(schema.items).where(eq(schema.items.id, item.id)),
+    touchListQuery(db, item.listId),
+  ]);
   c.executionCtx.waitUntil(deleteItemImages(c.env, item.id));
   return c.redirect(`/lists/${item.listId}`);
 });
@@ -329,7 +340,8 @@ owner.post("/items/:id/move", async (c) => {
             .where(eq(schema.items.id, row.id)),
         );
       const [first, ...rest] = writes;
-      if (first) await db.batch([first, ...rest]);
+      if (first)
+        await db.batch([first, ...rest, touchListQuery(db, item.listId)]);
     }
   }
   return c.redirect(`/lists/${item.listId}`);

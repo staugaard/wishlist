@@ -92,3 +92,55 @@ if (enrichForm) {
   };
   setTimeout(poll, 800);
 }
+
+// — Theme toggle (Auto → Light → Dark) —
+// The pre-paint script in the renderer applies the stored choice; this
+// cycles it. State lives in memory (storage is persistence only, so the
+// toggle keeps working in private mode).
+{
+  const KEY = "hinted-theme";
+  const COLORS: Record<string, string> = { light: "#e8e0d1", dark: "#211c15" };
+  const label = (m: string) =>
+    `Theme: ${m === "light" ? "Light" : m === "dark" ? "Dark" : "Auto"}`;
+  let mode = "auto";
+  try {
+    const stored = localStorage.getItem(KEY);
+    if (stored === "light" || stored === "dark") mode = stored;
+  } catch {
+    // Fine — we just start from auto.
+  }
+  const metas = document.querySelectorAll<HTMLMetaElement>(
+    'meta[name="theme-color"]',
+  );
+  for (const m of metas) m.dataset.default = m.content;
+  const apply = () => {
+    if (mode === "light" || mode === "dark") {
+      document.documentElement.dataset.theme = mode;
+      for (const m of metas) m.content = COLORS[mode] ?? m.content;
+    } else {
+      delete document.documentElement.dataset.theme;
+      for (const m of metas) m.content = m.dataset.default ?? m.content;
+    }
+    try {
+      if (mode === "auto") localStorage.removeItem(KEY);
+      else localStorage.setItem(KEY, mode);
+    } catch {
+      // Private mode etc. — the choice just won't persist.
+    }
+    for (const b of document.querySelectorAll("[data-theme-toggle]")) {
+      b.textContent = label(mode);
+    }
+  };
+  for (const b of document.querySelectorAll("[data-theme-toggle]")) {
+    b.textContent = label(mode);
+  }
+  document.addEventListener("click", (event) => {
+    const button = (event.target as Element | null)?.closest(
+      "[data-theme-toggle]",
+    );
+    if (!button) return;
+    const order = ["auto", "light", "dark"];
+    mode = order[(order.indexOf(mode) + 1) % order.length] ?? "auto";
+    apply();
+  });
+}

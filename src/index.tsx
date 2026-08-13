@@ -1,6 +1,7 @@
 import { asc, eq, sql } from "drizzle-orm";
 import { Hono } from "hono";
 import { createDb, schema } from "./db";
+import { listCacheKey, matchCached, storeAndMark } from "./lib/pageCache";
 import { currentUser, rejectCrossSite } from "./lib/session";
 import { HomePage } from "./pages/home";
 import { GiverListPage, NotFoundPage } from "./pages/list";
@@ -52,6 +53,16 @@ app.get("/l/:slug", async (c) => {
     c.status(404);
     return c.render(<NotFoundPage />, { title: "Not found · Hinted" });
   }
+
+  // One indexed row read decides both 404s and the cache key — the items
+  // query and SSR render are what the edge cache skips.
+  const key = listCacheKey(list.slug, list.updatedAt);
+  const cached = await matchCached(key, "HIT");
+  if (cached) {
+    cached.headers.set("X-Robots-Tag", "noindex");
+    return cached;
+  }
+
   const [ownerRow, listItems] = await Promise.all([
     db.query.users.findFirst({ where: eq(schema.users.id, list.userId) }),
     db
@@ -64,12 +75,15 @@ app.get("/l/:slug", async (c) => {
     c.status(404);
     return c.render(<NotFoundPage />, { title: "Not found · Hinted" });
   }
-  return c.render(
+  const res = await c.render(
     <GiverListPage list={list} owner={ownerRow} listItems={listItems} />,
     {
       title: `${list.name} · Hinted`,
+      description:
+        list.intro ?? `${ownerRow.name.split(" ")[0]} keeps a wishlist here.`,
     },
   );
+  return storeAndMark(key, res, (p) => c.executionCtx.waitUntil(p));
 });
 
 // Our stored copy of a product photo. Public (giver pages embed these);
@@ -78,16 +92,28 @@ const IMG_KEY = /^items\/\d+\/[a-f0-9]{16}\.(jpeg|png|webp|gif|avif)$/;
 app.get("/img/*", async (c) => {
   const key = c.req.path.slice("/img/".length);
   if (!IMG_KEY.test(key)) return c.notFound();
+  const cacheKey = new Request(new URL(c.req.url).origin + c.req.path);
+  const cached = await matchCached(cacheKey, "HIT");
+  if (cached) {
+    // Content-addressed: the browser may hold it forever.
+    cached.headers.set("Cache-Control", "public, max-age=31536000, immutable");
+    return cached;
+  }
   const object = await c.env.IMAGES.get(key);
   if (!object) return c.notFound();
-  return new Response(object.body, {
+  const res = new Response(object.body, {
     headers: {
       "Content-Type":
         object.httpMetadata?.contentType ?? "application/octet-stream",
-      "Cache-Control": "public, max-age=31536000, immutable",
       "X-Robots-Tag": "noindex",
     },
   });
+  return storeAndMark(
+    cacheKey,
+    res,
+    (p) => c.executionCtx.waitUntil(p),
+    "public, max-age=31536000, immutable",
+  );
 });
 
 // Proves the full loop: migrations → D1 binding → query.

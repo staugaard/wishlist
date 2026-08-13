@@ -22,6 +22,9 @@ function OwnerBar({ user }: { user: User }) {
       </a>
       <span class="hn-bar__right">
         <span class="hn-bar__label">{firstName(user.name)}</span>
+        <button class="hn-bar__quiet" type="button" data-theme-toggle>
+          Theme
+        </button>
         <form method="post" action="/logout">
           <button class="hn-bar__quiet" type="submit">
             Sign out
@@ -147,7 +150,7 @@ export function EditorPage({
         <PasteBar action={`/lists/${list.id}/items`} />
         <div class="hn-listhead">
           <div>
-            <h2 class="hn-listhead__title">{list.name}</h2>
+            <h1 class="hn-listhead__title">{list.name}</h1>
             <p class="hn-listhead__meta">
               {metaParts.join(" · ")} ·{" "}
               <a class="hn-quietlink" href={`/lists/${list.id}/settings`}>
