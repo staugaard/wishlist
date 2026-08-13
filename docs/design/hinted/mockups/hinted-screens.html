@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Wishlist — Hinted v2</title>
+<meta name="design_doc_mode" content="canvas">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,200;0,6..72,300;0,6..72,400;0,6..72,500;1,6..72,300&family=Hanken+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#8d8880;font-family:"Hanken Grotesk",sans-serif;-webkit-font-smoothing:antialiased}
+a{color:inherit}a:hover{color:inherit}
+.frame{position:absolute}
+.phone{width:390px;height:844px;border-radius:42px;overflow:hidden;box-shadow:0 30px 70px rgba(0,0,0,.3)}
+.desk{width:1280px;height:800px;border-radius:12px;overflow:hidden;box-shadow:0 30px 70px rgba(0,0,0,.3)}
+.cap{position:absolute;top:-30px;left:2px;white-space:nowrap;font:500 14px/1 ui-monospace,SFMono-Regular,Menlo,monospace;color:#f2efe9;letter-spacing:.06em;text-transform:uppercase;opacity:.85}
+.pagehd{position:absolute;left:80px;top:26px;width:1200px;color:#f6f3ee}
+.pagehd h1{font:300 36px/1 Newsreader,serif;letter-spacing:-.015em}
+.pagehd p{font:400 14px/1.6 ui-monospace,SFMono-Regular,Menlo,monospace;opacity:.75;margin-top:10px;max-width:900px}
+
+.p{--bg:#e8e0d1;--pa:#f4eee2;--ink:#33291d;--ink2:#7a6a55;--line:#cbbda3;--acc:#9c4a2f;--tag:#efe4cd;--tagl:#bfa87f;--tagi:#8a6d3e;--ph1:#ded2bc;--ph2:#e6dcca;--pht:#8d7c62;background:var(--bg);color:var(--ink)}
+.scr{width:100%;height:100%;overflow:hidden;display:flex;flex-direction:column}
+.ph{background-image:repeating-linear-gradient(135deg,var(--ph1) 0 5px,var(--ph2) 5px 10px);display:grid;place-items:center;flex:none}
+.ph i{font:500 9px/1.35 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.05em;color:var(--pht);text-align:center;font-style:normal;padding:0 8px}
+.lbl{font:500 10px/1 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--ink2)}
+.rule{height:1px;background:repeating-linear-gradient(90deg,var(--line) 0 5px,transparent 5px 10px);flex:none}
+.wm{font:200 52px/1 Newsreader,serif;letter-spacing:-.01em}
+.wm em{font-style:italic;font-weight:300;color:var(--acc)}
+.sw{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;gap:1px;height:36px;border-radius:3px;overflow:hidden;background:rgba(0,0,0,.22);box-shadow:0 0 0 1px rgba(0,0,0,.22)}
+.idt{display:flex;flex-direction:column;gap:26px;padding:36px 34px;height:100%;overflow:hidden}
+.idt .row{display:flex;flex-direction:column;gap:9px}
+.idt p{font:400 16px/1.6 "Hanken Grotesk";color:var(--ink2);max-width:350px}
+
+.bar{display:flex;align-items:center;justify-content:space-between;padding:16px 22px;border-bottom:1px solid var(--line);flex:none}
+.bar b{font:300 21px/1 Newsreader,serif}
+.bar b em{font-style:italic;color:var(--acc)}
+.bar span{font:500 10px/1 "Hanken Grotesk";letter-spacing:.14em;text-transform:uppercase;color:var(--ink2)}
+.gh{padding:24px 22px 18px}
+.gh h2{font:200 44px/1.02 Newsreader,serif;letter-spacing:-.02em}
+.gh p{font:400 17px/1.5 "Hanken Grotesk";color:var(--ink2);margin-top:12px;max-width:300px}
+
+.card{background:var(--pa);border:1px solid var(--line);padding:14px;margin:18px 22px 0;box-shadow:2px 3px 0 rgba(51,41,29,.09)}
+.card h3{font:300 29px/1.12 Newsreader,serif;letter-spacing:-.015em;margin-top:14px}
+.price{font:400 15px/1 "Hanken Grotesk";color:var(--ink2);margin-top:9px}
+.stamp{display:inline-block;font:700 11px/1 "Hanken Grotesk";letter-spacing:.16em;text-transform:uppercase;color:var(--acc);border:2px solid var(--acc);padding:7px 10px;transform:rotate(-2.5deg);margin-bottom:12px}
+.tag{display:flex;gap:11px;background:var(--tag);border:1px dashed var(--tagl);padding:11px 13px;margin-top:13px}
+.tag b{font:700 10px/1.6 "Hanken Grotesk";letter-spacing:.14em;text-transform:uppercase;color:var(--tagi);flex:none}
+.tag p{font:400 17px/1.35 "Hanken Grotesk";color:#4b3c28}
+.shop{display:block;text-align:center;font:600 13px/1 "Hanken Grotesk";letter-spacing:.12em;text-transform:uppercase;border:1px solid var(--ink);padding:15px;margin-top:13px;color:var(--ink)}
+.noimg{background:#efe9dc;border:1px dashed var(--line);display:grid;place-items:center;font:300 30px/1 Newsreader,serif;color:#a8977c}
+
+.lrow{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:19px 22px;border-bottom:1px solid var(--line)}
+.lrow h4{font:300 25px/1.05 Newsreader,serif;letter-spacing:-.015em}
+.lrow p{font:400 13px/1 "Hanken Grotesk";color:var(--ink2);margin-top:7px}
+.lrow span{font:300 20px/1 Newsreader,serif;color:var(--line)}
+
+.side{width:274px;background:#ded3bf;border-right:1px solid var(--line);padding:26px 20px;flex:none}
+.side a{display:block;font:400 17px/1 "Hanken Grotesk";padding:12px 13px;color:var(--ink2)}
+.side a.on{background:var(--pa);border:1px solid var(--line);color:var(--ink);font-weight:600}
+.paste{display:flex;gap:12px;align-items:center;padding:18px 30px;border-bottom:1px solid var(--line);background:var(--pa);flex:none}
+.paste input{flex:1;border:1px solid var(--line);background:#fffdf8;padding:15px 17px;font:400 16px/1 "Hanken Grotesk";color:var(--ink)}
+.paste button{border:1px solid var(--ink);background:var(--ink);color:#f4eee2;padding:15px 24px;font:600 12px/1 "Hanken Grotesk";letter-spacing:.14em;text-transform:uppercase}
+.erow{display:grid;grid-template-columns:22px 80px 1fr 132px 44px;gap:20px;align-items:center;padding:16px 30px;border-bottom:1px solid var(--line)}
+.erow h4{font:300 24px/1.1 Newsreader,serif;letter-spacing:-.015em}
+.erow small{display:block;font:400 14px/1.4 "Hanken Grotesk";color:var(--ink2);margin-top:6px}
+.erow .pri{font:700 10px/1 "Hanken Grotesk";letter-spacing:.14em;text-transform:uppercase;color:var(--acc);border:1.5px solid var(--acc);padding:8px 9px;justify-self:start}
+.erow .add{font:400 13px/1 "Hanken Grotesk";color:var(--ink2)}
+.grip{color:#b3a288;letter-spacing:2px;font-size:14px}
+.dots{color:#b3a288}
+</style>
+</head>
+<body>
+
+<div class="pagehd"><h1>Hinted — paper palette, Newsreader type</h1><p>Direction 01's brown paper, dashed rules and hard offset shadow, set in Newsreader Light with Hanken Grotesk for body and labels. Same five gifts, same three screens.</p></div>
+
+<div class="frame p" style="left:80px;top:230px;width:480px;height:844px;border-radius:6px"><span class="cap">Identity</span>
+<div class="idt">
+<div class="row"><div class="wm">H<em>i</em>nted</div><p>A wishlist is really a list of hints. Brown paper and a dashed tag tied on with string — but the voice is now a light serif rather than a letterpress one, so it reads calm instead of rustic.</p></div>
+<div class="row"><div class="lbl">Type</div><div style="font:200 38px/1.05 Newsreader,serif;letter-spacing:-.02em">Newsreader Light</div><div style="font:300 20px/1.3 Newsreader,serif;color:var(--ink2)">Extralight for page and list titles, Light for item names</div><div style="font:500 15px/1.4 'Hanken Grotesk';color:var(--ink2);margin-top:6px">Hanken Grotesk · notes, prices, labels, buttons</div></div>
+<div class="row"><div class="lbl">Light — default</div><div class="sw"><i style="background:#e8e0d1"></i><i style="background:#f4eee2"></i><i style="background:#efe4cd"></i><i style="background:#cbbda3"></i><i style="background:#9c4a2f"></i><i style="background:#33291d"></i></div><div class="lbl" style="margin-top:8px">Dark — evening</div><div class="sw"><i style="background:#211c15"></i><i style="background:#2b241b"></i><i style="background:#372d21"></i><i style="background:#463a2b"></i><i style="background:#d4784f"></i><i style="background:#eee4d2"></i></div></div>
+<div class="row"><div class="lbl">Warmth comes from</div><p>Paper stock, not gradients. Hairline dashed rules, a hard offset shadow like a card resting on a table, and brown-black ink instead of true black. The serif keeps it quiet; the dashed tag keeps it handmade.</p></div>
+</div></div>
+
+<div class="frame phone p" style="left:620px;top:230px"><span class="cap">Giver · shared link</span>
+<div class="scr">
+<div class="bar"><b>H<em>i</em>nted</b><span>Shared by Sofie</span></div>
+<div class="gh"><h2>Sofie's birthday</h2><p>A few things I'd love. No rush, no pressure — just hints.</p></div>
+<div class="rule"></div>
+<div class="card"><div class="stamp">Really wants this</div><div class="noimg" style="height:96px">no photo</div><h3>Wool socks, any colour</h3><div class="tag"><b>Note</b><p>Size 38–39. The thick ribbed kind.</p></div></div>
+<div class="card"><div class="ph" style="height:138px"><i>PRODUCT PHOTO<br>cast iron skillet 26 cm</i></div><h3>Cast iron skillet, 26 cm</h3><div class="price">About 649 kr</div><a class="shop" href="#">See it in the shop</a></div>
+</div></div>
+
+<div class="frame phone p" style="left:1060px;top:230px"><span class="cap">Owner · my lists</span>
+<div class="scr">
+<div class="bar"><b>H<em>i</em>nted</b><span>Sofie</span></div>
+<div class="gh" style="padding-bottom:18px"><h2>Your lists</h2><p>Four lists on the go. Tap one to tend it.</p></div>
+<div class="rule"></div>
+<div class="lrow"><div><h4>My birthday</h4><p>5 things · shared with 6 people</p></div><span>→</span></div>
+<div class="lrow"><div><h4>Kitchen stuff</h4><p>11 things · not shared yet</p></div><span>→</span></div>
+<div class="lrow"><div><h4>Ellen, age 7</h4><p>8 things · shared with 9 people</p></div><span>→</span></div>
+<div class="lrow"><div><h4>House things</h4><p>Nothing here yet</p></div><span>→</span></div>
+<div style="padding:22px"><a class="shop" href="#" style="margin:0">Start a new list</a></div>
+</div></div>
+
+<div class="frame desk p" style="left:1500px;top:252px"><span class="cap">Owner · list editor (desktop)</span>
+<div class="scr" style="flex-direction:row">
+<div class="side"><div style="font:200 30px/1 Newsreader,serif;margin:0 0 24px 13px">H<em style="font-style:italic;font-weight:300;color:var(--acc)">i</em>nted</div><div class="lbl" style="padding:0 13px 12px">Your lists</div><a href="#" class="on">My birthday</a><a href="#">Kitchen stuff</a><a href="#">Ellen, age 7</a><a href="#">House things</a><a href="#" style="color:var(--acc);margin-top:10px">+ New list</a></div>
+<div style="flex:1;display:flex;flex-direction:column;min-width:0">
+<div class="paste"><input value="Paste a link, or just type what you want…"><button>Add</button></div>
+<div style="display:flex;align-items:baseline;justify-content:space-between;padding:28px 30px 20px"><div><h2 style="font:200 38px/1 Newsreader,serif;letter-spacing:-.02em">My birthday</h2><p style="font:400 14px/1 'Hanken Grotesk';color:var(--ink2);margin-top:11px">5 things · 12 March · shared with 6 people</p></div><span style="font:600 11px/1 'Hanken Grotesk';letter-spacing:.14em;text-transform:uppercase;border:1px solid var(--ink);padding:12px 16px">Copy share link</span></div>
+<div class="erow"><span class="grip">⋮⋮</span><div class="noimg" style="height:72px;font-size:15px">no photo</div><div><h4>Wool socks, any colour</h4><small>Size 38–39. The thick ribbed kind.</small></div><div class="pri">Really wants</div><span class="dots">···</span></div>
+<div class="erow"><span class="grip">⋮⋮</span><div class="ph" style="height:72px"><i>PHOTO</i></div><div><h4>Cast iron skillet, 26 cm</h4><small>649 kr · fra-kokkenet.dk</small></div><span class="add">Add priority</span><span class="dots">···</span></div>
+<div class="erow"><span class="grip">⋮⋮</span><div class="ph" style="height:72px"><i>PHOTO</i></div><div><h4>Speckled ceramic mug</h4><small>180 kr · the pale grey one</small></div><span class="add">Add priority</span><span class="dots">···</span></div>
+<div class="erow"><span class="grip">⋮⋮</span><div class="noimg" style="height:72px;font-size:15px">no photo</div><div><h4>A poetry collection</h4><small>Any of hers I don't have — ask Mum, she knows.</small></div><span class="add">Add priority</span><span class="dots">···</span></div>
+<div class="erow"><span class="grip">⋮⋮</span><div class="ph" style="height:72px"><i>PHOTO</i></div><div><h4>Gardening gloves</h4><small>Medium. Leather palms if possible.</small></div><span class="add">Add priority</span><span class="dots">···</span></div>
+</div></div></div>
+
+</body>
+</html>

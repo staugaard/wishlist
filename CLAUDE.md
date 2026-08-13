@@ -1,6 +1,11 @@
 # Wishlist
 
-A family birthday/Christmas wishlist app on **Cloudflare Workers + Hono (JSX SSR) + D1 + Drizzle**. Currently scaffolding only — no product features yet. The product/tech research (stack decision, MVP feature set, data-model sketch) lives in `docs/tech-and-hosting-research.md`.
+A family birthday/Christmas wishlist app on **Cloudflare Workers + Hono (JSX SSR) + D1 + Drizzle**. Currently scaffolding only — no product features yet.
+
+Key documents, in order of authority:
+- `docs/design-brief.md` — the product source of truth (what the app is; note: there is deliberately NO claiming/reserving feature)
+- `docs/design/hinted/` — the **Hinted** design system handoff (tokens in `styles.css`, component contracts in `components.md`, full-fidelity mockups, and a README with the interaction rules). Match it exactly when building UI; its "do not add" list (no animations, no toasts, no spinners) is binding.
+- `docs/tech-and-hosting-research.md` — stack rationale and feature research (superseded by the brief where they disagree)
 
 ## Commands
 

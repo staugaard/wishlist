@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Wishlist — Four Directions</title>
+<meta name="design_doc_mode" content="canvas">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Karla:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;1,6..72,300&family=Hanken+Grotesk:wght@400;500;600;700&family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700&family=Public+Sans:wght@400;500;600;700&family=Petrona:ital,wght@0,500;0,600;0,700;1,500&family=Gabarito:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#8d8880;font-family:system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:inherit}a:hover{color:inherit}
+.frame{position:absolute}
+.phone{width:390px;height:844px;border-radius:42px;overflow:hidden;box-shadow:0 30px 70px rgba(0,0,0,.3)}
+.desk{width:1280px;height:800px;border-radius:12px;overflow:hidden;box-shadow:0 30px 70px rgba(0,0,0,.3)}
+.cap{position:absolute;top:-30px;left:2px;white-space:nowrap;font:500 14px/1 ui-monospace,SFMono-Regular,Menlo,monospace;color:#f2efe9;letter-spacing:.06em;text-transform:uppercase;opacity:.85}
+.scr{width:100%;height:100%;overflow:hidden;display:flex;flex-direction:column}
+.ph{background-image:repeating-linear-gradient(135deg,var(--ph1) 0 5px,var(--ph2) 5px 10px);display:grid;place-items:center;flex:none}
+.ph i{font:500 9px/1.35 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.05em;color:var(--pht);text-align:center;font-style:normal;padding:0 8px}
+.sw{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;gap:1px;height:34px;border-radius:3px;overflow:hidden;background:rgba(0,0,0,.22);box-shadow:0 0 0 1px rgba(0,0,0,.22)}
+.idt{display:flex;flex-direction:column;gap:26px;padding:36px 34px;height:100%;overflow:hidden}
+.idt .lbl{font:500 10px/1 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.14em;text-transform:uppercase;opacity:.5}
+.idt .row{display:flex;flex-direction:column;gap:9px}
+.pagehd{position:absolute;left:80px;top:26px;width:1400px;color:#f6f3ee}
+.pagehd h1{font:400 34px/1 "Instrument Serif",serif;letter-spacing:.01em}
+.pagehd p{font:400 14px/1.6 ui-monospace,SFMono-Regular,Menlo,monospace;opacity:.75;margin-top:10px;max-width:820px}
+
+/* ─────────── D1 · HINTED — paper & craft (light) ─────────── */
+.d1{--bg:#e8e0d1;--pa:#f4eee2;--ink:#33291d;--ink2:#7a6a55;--line:#cbbda3;--acc:#9c4a2f;--ph1:#ded2bc;--ph2:#e6dcca;--pht:#8d7c62;background:var(--bg);color:var(--ink);font-family:"Karla",sans-serif}
+.d1 .wm{font:400 46px/1 "Instrument Serif",serif;letter-spacing:-.01em}
+.d1 .wm em{font-style:italic;color:var(--acc)}
+.d1 .bar{display:flex;align-items:center;justify-content:space-between;padding:16px 22px;border-bottom:1px solid var(--line)}
+.d1 .bar b{font:400 20px/1 "Instrument Serif",serif}
+.d1 .bar span{font:600 10px/1 "Karla";letter-spacing:.16em;text-transform:uppercase;color:var(--ink2)}
+.d1 .gh{padding:30px 22px 22px}
+.d1 .gh h2{font:400 40px/1.02 "Instrument Serif",serif;letter-spacing:-.01em}
+.d1 .gh p{font:400 16px/1.5 "Karla";color:var(--ink2);margin-top:12px;max-width:300px}
+.d1 .rule{height:1px;background:repeating-linear-gradient(90deg,var(--line) 0 5px,transparent 5px 10px)}
+.d1 .card{background:var(--pa);border:1px solid var(--line);padding:14px;margin:18px 22px;box-shadow:2px 3px 0 rgba(51,41,29,.09)}
+.d1 .card .ph{height:196px;border:1px solid var(--line)}
+.d1 .card h3{font:400 27px/1.14 "Instrument Serif",serif;margin-top:14px}
+.d1 .price{font:600 13px/1 "Karla";letter-spacing:.1em;text-transform:uppercase;color:var(--ink2);margin-top:8px}
+.d1 .tag{display:flex;gap:10px;background:#efe4cd;border:1px dashed #bfa87f;padding:10px 12px;margin-top:13px}
+.d1 .tag b{font:700 10px/1.5 "Karla";letter-spacing:.14em;text-transform:uppercase;color:#8a6d3e;flex:none}
+.d1 .tag p{font:400 16px/1.35 "Karla";color:#4b3c28}
+.d1 .stamp{display:inline-block;font:700 11px/1 "Karla";letter-spacing:.16em;text-transform:uppercase;color:var(--acc);border:2px solid var(--acc);padding:7px 10px;transform:rotate(-2.5deg);margin-bottom:12px}
+.d1 .shop{display:block;text-align:center;font:600 14px/1 "Karla";letter-spacing:.1em;text-transform:uppercase;border:1px solid var(--ink);padding:14px;margin-top:12px;color:var(--ink)}
+.d1 .noimg{background:#efe9dc;border:1px dashed var(--line);height:96px;display:grid;place-items:center;font:400 30px/1 "Instrument Serif",serif;color:#a8977c}
+.d1 .lrow{display:flex;align-items:center;gap:14px;padding:17px 22px;border-bottom:1px solid var(--line)}
+.d1 .lrow h4{font:400 23px/1.1 "Instrument Serif",serif}
+.d1 .lrow p{font:400 13px/1 "Karla";color:var(--ink2);margin-top:5px}
+.d1 .side{width:274px;background:#ded3bf;border-right:1px solid var(--line);padding:24px 20px;flex:none}
+.d1 .side a{display:block;font:400 19px/1 "Instrument Serif",serif;padding:11px 12px;color:var(--ink)}
+.d1 .side a.on{background:var(--pa);border:1px solid var(--line)}
+.d1 .paste{display:flex;gap:12px;align-items:center;padding:18px 30px;border-bottom:1px solid var(--line);background:var(--pa)}
+.d1 .paste input{flex:1;border:1px solid var(--line);background:#fffdf8;padding:14px 16px;font:400 16px/1 "Karla";color:var(--ink2)}
+.d1 .paste button{border:1px solid var(--ink);background:var(--ink);color:#f4eee2;padding:14px 22px;font:600 12px/1 "Karla";letter-spacing:.14em;text-transform:uppercase}
+.d1 .erow{display:grid;grid-template-columns:22px 84px 1fr 130px 44px;gap:20px;align-items:center;padding:16px 30px;border-bottom:1px solid var(--line)}
+.d1 .erow h4{font:400 22px/1.15 "Instrument Serif",serif}
+.d1 .erow small{display:block;font:400 14px/1.4 "Karla";color:var(--ink2);margin-top:5px}
+.d1 .grip{font:400 15px/1 "Karla";color:#b3a288;letter-spacing:2px}
+
+/* ─────────── D2 · ØNSKE — soft scandinavian editorial (light) ─────────── */
+.d2{--bg:#f6f2eb;--pa:#fffdf9;--ink:#2b2926;--ink2:#8a8378;--line:#e3ddd1;--acc:#a8624a;--ph1:#ece6da;--ph2:#f2ede3;--pht:#a29a8b;background:var(--bg);color:var(--ink);font-family:"Hanken Grotesk",sans-serif}
+.d2 .wm{font:300 52px/1 "Newsreader",serif;letter-spacing:-.015em}
+.d2 .bar{display:flex;align-items:baseline;justify-content:space-between;padding:20px 26px 0}
+.d2 .bar b{font:300 19px/1 "Newsreader",serif}
+.d2 .bar span{font:500 11px/1 "Hanken Grotesk";letter-spacing:.1em;text-transform:uppercase;color:var(--ink2)}
+.d2 .gh{padding:30px 26px 22px}
+.d2 .gh .ov{font:500 11px/1 "Hanken Grotesk";letter-spacing:.18em;text-transform:uppercase;color:var(--acc)}
+.d2 .gh h2{font:300 46px/1.02 "Newsreader",serif;letter-spacing:-.02em;margin-top:16px}
+.d2 .gh p{font:400 17px/1.55 "Hanken Grotesk";color:var(--ink2);margin-top:14px;max-width:290px}
+.d2 .it{padding:20px 26px;border-top:1px solid var(--line)}
+.d2 .it .ph{height:230px;border-radius:2px}
+.d2 .it .no{display:flex;align-items:baseline;gap:14px;margin-top:15px}
+.d2 .it .num{font:400 12px/1 "Newsreader",serif;color:var(--ink2);flex:none}
+.d2 .it h3{font:300 30px/1.1 "Newsreader",serif;letter-spacing:-.015em}
+.d2 .it .pr{font:400 15px/1 "Hanken Grotesk";color:var(--ink2);margin:10px 0 0 26px}
+.d2 .note{margin:16px 0 0 26px;padding-left:16px;border-left:2px solid var(--acc)}
+.d2 .note b{display:block;font:600 10px/1 "Hanken Grotesk";letter-spacing:.16em;text-transform:uppercase;color:var(--acc)}
+.d2 .note p{font:400 17px/1.4 "Hanken Grotesk";margin-top:7px}
+.d2 .want{display:inline-flex;align-items:center;gap:9px;font:600 11px/1 "Hanken Grotesk";letter-spacing:.16em;text-transform:uppercase;color:#fffdf9;background:var(--acc);padding:9px 13px;border-radius:99px}
+.d2 .shop{display:inline-block;font:500 15px/1 "Hanken Grotesk";border-bottom:1px solid var(--ink);padding-bottom:4px;margin:16px 0 0 26px;color:var(--ink)}
+.d2 .noimg{height:112px;border:1px solid var(--line);background:var(--pa);display:grid;place-items:center;font:300 34px/1 "Newsreader",serif;color:#c4bdae}
+.d2 .lrow{display:flex;align-items:center;justify-content:space-between;padding:24px 26px;border-top:1px solid var(--line)}
+.d2 .lrow h4{font:300 27px/1 "Newsreader",serif;letter-spacing:-.015em}
+.d2 .lrow p{font:400 13px/1 "Hanken Grotesk";color:var(--ink2);margin-top:7px}
+.d2 .side{width:272px;background:var(--bg);border-right:1px solid var(--line);padding:30px 22px;flex:none}
+.d2 .side a{display:block;font:400 17px/1 "Hanken Grotesk";padding:12px 14px;border-radius:6px;color:var(--ink2)}
+.d2 .side a.on{background:var(--pa);color:var(--ink);font-weight:600;box-shadow:0 1px 2px rgba(43,41,38,.06)}
+.d2 .paste{display:flex;gap:12px;align-items:center;padding:22px 36px;background:var(--pa);border-bottom:1px solid var(--line)}
+.d2 .paste input{flex:1;border:1px solid var(--line);border-radius:8px;background:var(--bg);padding:15px 18px;font:400 16px/1 "Hanken Grotesk";color:var(--ink2)}
+.d2 .paste button{border:0;border-radius:8px;background:var(--acc);color:#fffdf9;padding:15px 26px;font:600 14px/1 "Hanken Grotesk"}
+.d2 .erow{display:grid;grid-template-columns:20px 76px 1fr 120px 40px;gap:22px;align-items:center;padding:20px 36px;border-bottom:1px solid var(--line)}
+.d2 .erow h4{font:300 24px/1.1 "Newsreader",serif;letter-spacing:-.015em}
+.d2 .erow small{display:block;font:400 14px/1.4 "Hanken Grotesk";color:var(--ink2);margin-top:6px}
+.d2 .grip{color:#c9c2b4;font:400 14px/1 sans-serif;letter-spacing:2px}
+
+/* ─────────── D3 · WISHWELL — evening warmth (dark-first) ─────────── */
+.d3{--bg:#191411;--pa:#221b16;--pa2:#2b221b;--ink:#f4ece1;--ink2:#a2937f;--line:#3a2e25;--acc:#e8a24a;--ph1:#2a211a;--ph2:#31271f;--pht:#8a7862;background:var(--bg);color:var(--ink);font-family:"Public Sans",sans-serif}
+.d3 .wm{font:700 44px/1 "Bricolage Grotesque",sans-serif;letter-spacing:-.03em}
+.d3 .wm span{color:var(--acc)}
+.d3 .bar{display:flex;align-items:center;justify-content:space-between;padding:18px 22px}
+.d3 .bar b{font:600 18px/1 "Bricolage Grotesque",sans-serif;letter-spacing:-.02em}
+.d3 .bar span{font:500 11px/1 "Public Sans";letter-spacing:.1em;text-transform:uppercase;color:var(--ink2)}
+.d3 .gh{padding:26px 22px 24px;background:radial-gradient(120% 90% at 50% 0%,rgba(232,162,74,.16),transparent 70%)}
+.d3 .gh h2{font:700 38px/1.05 "Bricolage Grotesque",sans-serif;letter-spacing:-.03em}
+.d3 .gh p{font:400 17px/1.5 "Public Sans";color:var(--ink2);margin-top:12px;max-width:300px}
+.d3 .card{background:var(--pa);border:1px solid var(--line);border-radius:20px;padding:12px;margin:0 18px 16px;box-shadow:0 10px 30px rgba(0,0,0,.35)}
+.d3 .card.hi{border-color:rgba(232,162,74,.55);box-shadow:0 0 0 1px rgba(232,162,74,.2),0 14px 40px rgba(232,162,74,.1)}
+.d3 .card .ph{height:200px;border-radius:14px}
+.d3 .card h3{font:600 25px/1.16 "Bricolage Grotesque",sans-serif;letter-spacing:-.02em;margin-top:14px}
+.d3 .price{font:400 15px/1 "Public Sans";color:var(--ink2);margin-top:9px}
+.d3 .want{display:inline-flex;align-items:center;gap:8px;font:700 11px/1 "Public Sans";letter-spacing:.14em;text-transform:uppercase;color:#1b1309;background:var(--acc);padding:9px 13px;border-radius:99px;margin-bottom:12px}
+.d3 .note{background:var(--pa2);border-radius:12px;padding:13px 15px;margin-top:14px}
+.d3 .note b{font:700 10px/1 "Public Sans";letter-spacing:.16em;text-transform:uppercase;color:var(--acc)}
+.d3 .note p{font:400 17px/1.4 "Public Sans";margin-top:8px}
+.d3 .shop{display:block;text-align:center;font:600 15px/1 "Public Sans";border:1px solid var(--line);border-radius:12px;padding:15px;margin-top:14px;color:var(--ink)}
+.d3 .noimg{height:120px;border-radius:14px;background:linear-gradient(160deg,#2c231b,#211a15);display:grid;place-items:center;font:600 30px/1 "Bricolage Grotesque",sans-serif;color:#5b4a38}
+.d3 .lrow{display:flex;align-items:center;justify-content:space-between;background:var(--pa);border:1px solid var(--line);border-radius:16px;padding:18px 20px;margin:0 18px 12px}
+.d3 .lrow h4{font:600 21px/1 "Bricolage Grotesque",sans-serif;letter-spacing:-.02em}
+.d3 .lrow p{font:400 13px/1 "Public Sans";color:var(--ink2);margin-top:7px}
+.d3 .side{width:272px;background:#141010;border-right:1px solid var(--line);padding:26px 18px;flex:none}
+.d3 .side a{display:block;font:500 16px/1 "Public Sans";padding:13px 14px;border-radius:10px;color:var(--ink2)}
+.d3 .side a.on{background:var(--pa2);color:var(--ink)}
+.d3 .paste{display:flex;gap:12px;align-items:center;padding:20px 34px;background:var(--pa);border-bottom:1px solid var(--line)}
+.d3 .paste input{flex:1;border:1px solid var(--line);border-radius:10px;background:#150f0c;padding:15px 18px;font:400 16px/1 "Public Sans";color:var(--ink2)}
+.d3 .paste button{border:0;border-radius:10px;background:var(--acc);color:#1b1309;padding:15px 26px;font:700 14px/1 "Public Sans"}
+.d3 .erow{display:grid;grid-template-columns:20px 76px 1fr 120px 40px;gap:22px;align-items:center;padding:18px 34px;border-bottom:1px solid var(--line)}
+.d3 .erow h4{font:600 22px/1.1 "Bricolage Grotesque",sans-serif;letter-spacing:-.02em}
+.d3 .erow small{display:block;font:400 14px/1.4 "Public Sans";color:var(--ink2);margin-top:6px}
+.d3 .grip{color:#4d3f32;letter-spacing:2px;font-size:14px}
+
+/* ─────────── D4 · RIBBON — storybook (light, deep hues) ─────────── */
+.d4{--bg:#fbf3e8;--pa:#ffffff;--ink:#3d1f33;--ink2:#8a6a80;--line:#eadbcb;--acc:#c2452f;--acc2:#e0a02c;--ph1:#f0e3d2;--ph2:#f7ecdd;--pht:#a98d78;background:var(--bg);color:var(--ink);font-family:"Gabarito",sans-serif}
+.d4 .wm{font:700 46px/1 "Petrona",serif;letter-spacing:-.01em;color:#5c2246}
+.d4 .bar{display:flex;align-items:center;justify-content:space-between;padding:16px 22px;background:#5c2246;color:#fbf3e8}
+.d4 .bar b{font:700 19px/1 "Petrona",serif}
+.d4 .bar span{font:600 11px/1 "Gabarito";letter-spacing:.1em;text-transform:uppercase;opacity:.7}
+.d4 .gh{padding:26px 22px 18px;background:#5c2246;color:#fbf3e8;border-radius:0 0 28px 28px}
+.d4 .gh h2{font:700 39px/1.04 "Petrona",serif}
+.d4 .gh p{font:400 17px/1.5 "Gabarito";color:#e2c6d6;margin-top:12px;max-width:300px}
+.d4 .card{background:var(--pa);border:2px solid #3d1f33;border-radius:22px;padding:12px;margin:14px 20px 0;box-shadow:4px 5px 0 #3d1f33}
+.d4 .card.hi{background:#fff6e4}
+.d4 .card .ph{height:196px;border-radius:14px}
+.d4 .card h3{font:700 26px/1.14 "Petrona",serif;margin-top:14px}
+.d4 .price{display:inline-block;font:600 14px/1 "Gabarito";background:#f4e6d3;border-radius:99px;padding:8px 13px;margin-top:10px}
+.d4 .want{display:inline-flex;align-items:center;gap:8px;font:700 11px/1 "Gabarito";letter-spacing:.12em;text-transform:uppercase;color:#fff;background:var(--acc);border-radius:99px;padding:9px 14px;margin-bottom:11px}
+.d4 .note{background:#fdf1d8;border:2px dashed var(--acc2);border-radius:14px;padding:12px 14px;margin-top:13px}
+.d4 .note b{font:700 10px/1 "Gabarito";letter-spacing:.14em;text-transform:uppercase;color:#a5741a}
+.d4 .note p{font:400 17px/1.4 "Gabarito";margin-top:7px}
+.d4 .shop{display:block;text-align:center;font:600 15px/1 "Gabarito";background:#3d1f33;color:#fbf3e8;border-radius:14px;padding:15px;margin-top:14px}
+.d4 .noimg{height:118px;border-radius:14px;background:repeating-linear-gradient(45deg,#f6e7d4 0 12px,#f1dfc8 12px 24px);display:grid;place-items:center;font:700 30px/1 "Petrona",serif;color:#c4a381}
+.d4 .lrow{display:flex;align-items:center;justify-content:space-between;background:var(--pa);border:2px solid #3d1f33;border-radius:18px;padding:16px 18px;margin:0 20px 14px;box-shadow:3px 4px 0 #3d1f33}
+.d4 .lrow h4{font:700 21px/1 "Petrona",serif}
+.d4 .lrow p{font:400 13px/1 "Gabarito";color:var(--ink2);margin-top:6px}
+.d4 .side{width:272px;background:#5c2246;color:#fbf3e8;padding:26px 18px;flex:none}
+.d4 .side a{display:block;font:500 16px/1 "Gabarito";padding:13px 14px;border-radius:10px;color:#dcbcce}
+.d4 .side a.on{background:#fbf3e8;color:#5c2246;font-weight:700}
+.d4 .paste{display:flex;gap:12px;align-items:center;padding:20px 34px;background:#fff;border-bottom:2px solid #3d1f33}
+.d4 .paste input{flex:1;border:2px solid #3d1f33;border-radius:12px;background:#fdf8f1;padding:14px 18px;font:400 16px/1 "Gabarito";color:var(--ink2)}
+.d4 .paste button{border:2px solid #3d1f33;border-radius:12px;background:var(--acc2);color:#3d1f33;padding:14px 24px;font:700 14px/1 "Gabarito"}
+.d4 .erow{display:grid;grid-template-columns:20px 76px 1fr 130px 40px;gap:22px;align-items:center;padding:16px 34px;border-bottom:1px solid var(--line)}
+.d4 .erow h4{font:700 22px/1.1 "Petrona",serif}
+.d4 .erow small{display:block;font:400 14px/1.4 "Gabarito";color:var(--ink2);margin-top:5px}
+.d4 .grip{color:#c8b3a0;letter-spacing:2px;font-size:14px}
+</style>
+</head>
+<body>
+
+<div class="pagehd"><h1>Wishlist — four directions</h1><p>Same family, same five gifts, four identities. Each direction shows its wordmark and palette, the giver's shared page (phone), the owner's home (phone), and the owner's list editor (desktop). Native theme shown; the paired swatch row is the other theme.</p></div>
+
+<!-- ══════════ D1 · HINTED ══════════ -->
+<div class="frame d1" style="left:80px;top:230px;width:480px;height:844px;border-radius:6px"><span class="cap">01 · Paper &amp; craft</span>
+<div class="idt">
+<div class="row"><div class="wm">H<em>i</em>nted</div><p style="font:400 17px/1.5 Karla;color:var(--ink2);max-width:340px">A wishlist is really a list of hints. Brown paper, letterpress serif, a dashed tag tied on with string.</p></div>
+<div class="row"><div class="lbl">Type</div><div style="font:400 34px/1.1 'Instrument Serif',serif">Instrument Serif</div><div style="font:500 15px/1.4 Karla;color:var(--ink2)">Karla · body, labels, small caps</div></div>
+<div class="row"><div class="lbl">Light — default</div><div class="sw"><i style="background:#e8e0d1"></i><i style="background:#f4eee2"></i><i style="background:#cbbda3"></i><i style="background:#9c4a2f"></i><i style="background:#8a6d3e"></i><i style="background:#33291d"></i></div><div class="lbl" style="margin-top:6px">Dark — evening</div><div class="sw"><i style="background:#211c15"></i><i style="background:#2b241b"></i><i style="background:#463a2b"></i><i style="background:#d4784f"></i><i style="background:#c9a86a"></i><i style="background:#eee4d2"></i></div></div>
+<div class="row"><div class="lbl">Warmth comes from</div><p style="font:400 16px/1.6 Karla;color:var(--ink2)">Paper stock, not gradients. Hairline dashed rules. A hard offset shadow, like a card resting on a table. Ink that is brown-black, never true black.</p></div>
+</div></div>
+
+<div class="frame phone d1" style="left:620px;top:230px"><span class="cap">Giver · shared link</span>
+<div class="scr">
+<div class="bar"><b>H<em style="font-style:italic;color:var(--acc)">i</em>nted</b><span>Shared by Sofie</span></div>
+<div class="gh"><h2>Sofie's birthday</h2><p>A few things I'd love. No rush, no pressure — just hints.</p></div>
+<div class="rule"></div>
+<div class="card"><div class="stamp">Really wants this</div><div class="noimg">no photo</div><h3>Wool socks, any colour</h3><div class="tag"><b>Note</b><p>Size 38–39. The thick ribbed kind.</p></div></div>
+<div class="card"><div class="ph" style="height:166px"><i>PRODUCT PHOTO<br>cast iron skillet</i></div><h3>Cast iron skillet, 26 cm</h3><div class="price">About 649 kr</div><a class="shop" href="#">See it in the shop</a></div>
+</div></div>
+
+<div class="frame phone d1" style="left:1060px;top:230px"><span class="cap">Owner · my lists</span>
+<div class="scr">
+<div class="bar"><b>H<em style="font-style:italic;color:var(--acc)">i</em>nted</b><span>Sofie</span></div>
+<div class="gh" style="padding-bottom:16px"><h2>Your lists</h2><p>Four lists on the go. Tap one to tend it.</p></div>
+<div class="rule"></div>
+<div class="lrow"><div><h4>My birthday</h4><p>5 things · shared with 6 people</p></div><span style="font:400 22px/1 'Instrument Serif',serif;color:var(--line)">→</span></div>
+<div class="lrow"><div><h4>Kitchen stuff</h4><p>11 things · not shared yet</p></div><span style="font:400 22px/1 'Instrument Serif',serif;color:var(--line)">→</span></div>
+<div class="lrow"><div><h4>Ellen, age 7</h4><p>8 things · shared with 9 people</p></div><span style="font:400 22px/1 'Instrument Serif',serif;color:var(--line)">→</span></div>
+<div class="lrow"><div><h4>House things</h4><p>Nothing here yet</p></div><span style="font:400 22px/1 'Instrument Serif',serif;color:var(--line)">→</span></div>
+<div style="padding:22px"><a class="shop" href="#" style="margin:0">Start a new list</a></div>
+</div></div>
+
+<div class="frame desk d1" style="left:1500px;top:252px"><span class="cap">Owner · list editor (desktop)</span>
+<div class="scr" style="flex-direction:row">
+<div class="side"><div style="font:400 26px/1 'Instrument Serif',serif;margin-bottom:22px">H<em style="font-style:italic;color:var(--acc)">i</em>nted</div><div class="lbl" style="font:600 10px/1 Karla;letter-spacing:.14em;text-transform:uppercase;color:var(--ink2);padding:0 12px 10px">Your lists</div><a href="#" class="on">My birthday</a><a href="#">Kitchen stuff</a><a href="#">Ellen, age 7</a><a href="#">House things</a><a href="#" style="color:var(--ink2);margin-top:8px">+ New list</a></div>
+<div style="flex:1;display:flex;flex-direction:column;min-width:0">
+<div class="paste"><input value="Paste a link, or just type what you want…"><button>Add</button></div>
+<div style="display:flex;align-items:baseline;justify-content:space-between;padding:26px 30px 18px"><div><h2 style="font:400 34px/1 'Instrument Serif',serif">My birthday</h2><p style="font:400 14px/1 Karla;color:var(--ink2);margin-top:10px">5 things · 12 March · shared with 6 people</p></div><span style="font:600 11px/1 Karla;letter-spacing:.14em;text-transform:uppercase;border:1px solid var(--ink);padding:11px 15px">Copy share link</span></div>
+<div class="erow"><span class="grip">⋮⋮</span><div class="noimg" style="height:76px;font-size:20px">no photo</div><div><h4>Wool socks, any colour</h4><small>Size 38–39. The thick ribbed kind.</small></div><div style="font:700 10px/1 Karla;letter-spacing:.14em;text-transform:uppercase;color:var(--acc);border:1.5px solid var(--acc);padding:7px 9px;justify-self:start">Really wants</div><span style="color:#b3a288">···</span></div>
+<div class="erow"><span class="grip">⋮⋮</span><div class="ph" style="height:76px"><i>PHOTO</i></div><div><h4>Cast iron skillet, 26 cm</h4><small>649 kr · fra-kokkenet.dk</small></div><div style="font:400 13px/1 Karla;color:var(--ink2)">Add priority</div><span style="color:#b3a288">···</span></div>
+<div class="erow"><span class="grip">⋮⋮</span><div class="ph" style="height:76px"><i>PHOTO</i></div><div><h4>Speckled ceramic mug</h4><small>180 kr · the pale grey one</small></div><div style="font:400 13px/1 Karla;color:var(--ink2)">Add priority</div><span style="color:#b3a288">···</span></div>
+<div class="erow"><span class="grip">⋮⋮</span><div class="noimg" style="height:76px;font-size:20px">no photo</div><div><h4>A poetry collection</h4><small>Any of hers I don't have — ask Mum, she knows.</small></div><div style="font:400 13px/1 Karla;color:var(--ink2)">Add priority</div><span style="color:#b3a288">···</span></div>
+<div class="erow"><span class="grip">⋮⋮</span><div class="ph" style="height:76px"><i>PHOTO</i></div><div><h4>Gardening gloves</h4><small>Medium. Leather palms if possible.</small></div><div style="font:400 13px/1 Karla;color:var(--ink2)">Add priority</div><span style="color:#b3a288">···</span></div>
+</div></div></div>
+
+<!-- ══════════ D2 · ØNSKE ══════════ -->
+<div class="frame d2" style="left:80px;top:1310px;width:480px;height:844px;border-radius:6px"><span class="cap">02 · Soft Scandinavian editorial</span>
+<div class="idt">
+<div class="row"><div class="wm">Ønske</div><p style="font:400 17px/1.5 'Hanken Grotesk';color:var(--ink2);max-width:340px">Danish for wish. Oat and clay, enormous margins, a light serif that behaves like a magazine masthead.</p></div>
+<div class="row"><div class="lbl">Type</div><div style="font:300 36px/1.1 Newsreader,serif;letter-spacing:-.02em">Newsreader Light</div><div style="font:500 15px/1.4 'Hanken Grotesk';color:var(--ink2)">Hanken Grotesk · body and UI</div></div>
+<div class="row"><div class="lbl">Light — default</div><div class="sw"><i style="background:#f6f2eb"></i><i style="background:#fffdf9"></i><i style="background:#e3ddd1"></i><i style="background:#c9b9a4"></i><i style="background:#a8624a"></i><i style="background:#2b2926"></i></div><div class="lbl" style="margin-top:6px">Dark — evening</div><div class="sw"><i style="background:#1c1b19"></i><i style="background:#252320"></i><i style="background:#3b3833"></i><i style="background:#7e7264"></i><i style="background:#d08e74"></i><i style="background:#f2ede4"></i></div></div>
+<div class="row"><div class="lbl">Warmth comes from</div><p style="font:400 16px/1.6 'Hanken Grotesk';color:var(--ink2)">Space, mostly. No card borders and no shadows — items are separated by a single hairline and a lot of air. Clay red appears once per screen, never twice.</p></div>
+</div></div>
+
+<div class="frame phone d2" style="left:620px;top:1310px"><span class="cap">Giver · shared link</span>
+<div class="scr">
+<div class="bar"><b>Ønske</b><span>Sofie's list</span></div>
+<div class="gh"><div class="ov">Birthday · 12 March</div><h2>Sofie's birthday</h2><p>A few things I'd love. No rush, no pressure — just hints.</p></div>
+<div class="it" style="background:var(--pa)"><span class="want">Really wants this</span><div class="noimg">Wool socks</div><div class="no"><span class="num">01</span><h3>Wool socks, any colour</h3></div><div class="note"><b>Note</b><p>Size 38–39. The thick ribbed kind.</p></div></div>
+<div class="it"><div class="ph" style="height:156px"><i>PRODUCT PHOTO<br>cast iron skillet 26 cm</i></div><div class="no"><span class="num">02</span><h3>Cast iron skillet, 26 cm</h3></div><div class="pr">About 649 kr</div><a class="shop" href="#">See it in the shop →</a></div>
+</div></div>
+
+<div class="frame phone d2" style="left:1060px;top:1310px"><span class="cap">Owner · my lists</span>
+<div class="scr">
+<div class="bar"><b>Ønske</b><span>Sofie</span></div>
+<div class="gh" style="padding-bottom:18px"><div class="ov">Four lists</div><h2>Your lists</h2></div>
+<div class="lrow"><div><h4>My birthday</h4><p>5 things · shared with 6 people</p></div><span style="color:var(--ink2)">→</span></div>
+<div class="lrow"><div><h4>Kitchen stuff</h4><p>11 things · not shared yet</p></div><span style="color:var(--ink2)">→</span></div>
+<div class="lrow"><div><h4>Ellen, age 7</h4><p>8 things · shared with 9 people</p></div><span style="color:var(--ink2)">→</span></div>
+<div class="lrow"><div><h4>House things</h4><p>Nothing here yet</p></div><span style="color:var(--ink2)">→</span></div>
+<div class="lrow" style="border-bottom:1px solid var(--line)"><div><h4 style="color:var(--acc)">Start a new list</h4><p>Name it whatever you like</p></div><span style="color:var(--acc)">+</span></div>
+</div></div>
+
+<div class="frame desk d2" style="left:1500px;top:1332px"><span class="cap">Owner · list editor (desktop)</span>
+<div class="scr" style="flex-direction:row">
+<div class="side"><div style="font:300 26px/1 Newsreader,serif;margin-bottom:26px;padding:0 14px">Ønske</div><div style="font:500 10px/1 'Hanken Grotesk';letter-spacing:.16em;text-transform:uppercase;color:var(--ink2);padding:0 14px 12px">Your lists</div><a href="#" class="on">My birthday</a><a href="#">Kitchen stuff</a><a href="#">Ellen, age 7</a><a href="#">House things</a><a href="#" style="color:var(--acc);margin-top:10px">+ New list</a></div>
+<div style="flex:1;display:flex;flex-direction:column;min-width:0;background:var(--bg)">
+<div class="paste"><input value="Paste a link, or just type what you want…"><button>Add</button></div>
+<div style="display:flex;align-items:baseline;justify-content:space-between;padding:34px 36px 22px"><div><div class="ov" style="font:500 11px/1 'Hanken Grotesk';letter-spacing:.18em;text-transform:uppercase;color:var(--acc)">Birthday · 12 March</div><h2 style="font:300 36px/1 Newsreader,serif;letter-spacing:-.02em;margin-top:14px">My birthday</h2></div><span style="font:500 14px/1 'Hanken Grotesk';border:1px solid var(--line);border-radius:8px;padding:12px 18px;background:var(--pa)">Copy share link</span></div>
+<div class="erow"><span class="grip">⋮⋮</span><div class="noimg" style="height:68px;font-size:15px">no photo</div><div><h4>Wool socks, any colour</h4><small>Size 38–39. The thick ribbed kind.</small></div><span class="want" style="justify-self:start;font-size:9px;padding:7px 10px">Really wants</span><span style="color:#c9c2b4">···</span></div>
+<div class="erow"><span class="grip">⋮⋮</span><div class="ph" style="height:68px"><i>PHOTO</i></div><div><h4>Cast iron skillet, 26 cm</h4><small>649 kr · fra-kokkenet.dk</small></div><span style="font:400 13px/1 'Hanken Grotesk';color:var(--ink2)">Add priority</span><span style="color:#c9c2b4">···</span></div>
+<div class="erow"><span class="grip">⋮⋮</span><div class="ph" style="height:68px"><i>PHOTO</i></div><div><h4>Speckled ceramic mug</h4><small>180 kr · the pale grey one</small></div><span style="font:400 13px/1 'Hanken Grotesk';color:var(--ink2)">Add priority</span><span style="color:#c9c2b4">···</span></div>
+<div class="erow"><span class="grip">⋮⋮</span><div class="noimg" style="height:68px;font-size:15px">no photo</div><div><h4>A poetry collection</h4><small>Any of hers I don't have — ask Mum, she knows.</small></div><span style="font:400 13px/1 'Hanken Grotesk';color:var(--ink2)">Add priority</span><span style="color:#c9c2b4">···</span></div>
+<div class="erow"><span class="grip">⋮⋮</span><div class="ph" style="height:68px"><i>PHOTO</i></div><div><h4>Gardening gloves</h4><small>Medium. Leather palms if possible.</small></div><span style="font:400 13px/1 'Hanken Grotesk';color:var(--ink2)">Add priority</span><span style="color:#c9c2b4">···</span></div>
+</div></div></div>
+
+<!-- ══════════ D3 · WISHWELL ══════════ -->
+<div class="frame d3" style="left:80px;top:2390px;width:480px;height:844px;border-radius:6px"><span class="cap">03 · Evening warmth, dark-first</span>
+<div class="idt">
+<div class="row"><div class="wm">Wish<span>well</span></div><p style="font:400 17px/1.5 'Public Sans';color:var(--ink2);max-width:340px">Built for the couch at nine in the evening. Dark by default, lit by a single amber lamp; the light theme is derived from it, not the other way round.</p></div>
+<div class="row"><div class="lbl">Type</div><div style="font:700 34px/1.1 'Bricolage Grotesque',sans-serif;letter-spacing:-.03em">Bricolage Grotesque</div><div style="font:500 15px/1.4 'Public Sans';color:var(--ink2)">Public Sans · body and UI</div></div>
+<div class="row"><div class="lbl">Dark — default</div><div class="sw"><i style="background:#191411"></i><i style="background:#221b16"></i><i style="background:#2b221b"></i><i style="background:#3a2e25"></i><i style="background:#e8a24a"></i><i style="background:#f4ece1"></i></div><div class="lbl" style="margin-top:6px">Light — daytime</div><div class="sw"><i style="background:#fbf7f1"></i><i style="background:#fff"></i><i style="background:#f0e8dc"></i><i style="background:#ddd0be"></i><i style="background:#b4741f"></i><i style="background:#231b14"></i></div></div>
+<div class="row"><div class="lbl">Warmth comes from</div><p style="font:400 16px/1.6 'Public Sans';color:var(--ink2)">Light, literally. One radial glow behind the list header. Priority items are lit rather than badged — a warm rim on the card. Everything else stays unlit and calm.</p></div>
+</div></div>
+
+<div class="frame phone d3" style="left:620px;top:2390px"><span class="cap">Giver · shared link</span>
+<div class="scr">
+<div class="bar"><b>Wish<span style="color:var(--acc)">well</span></b><span>Shared by Sofie</span></div>
+<div class="gh"><h2>Sofie's birthday</h2><p>A few things I'd love. No rush, no pressure — just hints.</p></div>
+<div class="card hi"><span class="want">Really wants this</span><div class="noimg">Wool socks</div><h3>Wool socks, any colour</h3><div class="note"><b>Note</b><p>Size 38–39. The thick ribbed kind.</p></div></div>
+<div class="card"><div class="ph" style="height:152px"><i>PRODUCT PHOTO<br>cast iron skillet 26 cm</i></div><h3>Cast iron skillet, 26 cm</h3><div class="price">About 649 kr</div><a class="shop" href="#">See it in the shop</a></div>
+</div></div>
+
+<div class="frame phone d3" style="left:1060px;top:2390px"><span class="cap">Owner · my lists</span>
+<div class="scr">
+<div class="bar"><b>Wish<span style="color:var(--acc)">well</span></b><span>Sofie</span></div>
+<div class="gh" style="padding-bottom:20px"><h2>Your lists</h2><p>Four on the go.</p></div>
+<div class="lrow"><div><h4>My birthday</h4><p>5 things · shared with 6 people</p></div><span style="color:var(--ink2)">→</span></div>
+<div class="lrow"><div><h4>Kitchen stuff</h4><p>11 things · not shared yet</p></div><span style="color:var(--ink2)">→</span></div>
+<div class="lrow"><div><h4>Ellen, age 7</h4><p>8 things · shared with 9 people</p></div><span style="color:var(--ink2)">→</span></div>
+<div class="lrow"><div><h4>House things</h4><p>Nothing here yet</p></div><span style="color:var(--ink2)">→</span></div>
+<div style="padding:6px 18px"><a class="shop" href="#" style="margin:0;background:var(--acc);border-color:var(--acc);color:#1b1309;font-weight:700">Start a new list</a></div>
+</div></div>
+
+<div class="frame desk d3" style="left:1500px;top:2412px"><span class="cap">Owner · list editor (desktop)</span>
+<div class="scr" style="flex-direction:row">
+<div class="side"><div style="font:700 24px/1 'Bricolage Grotesque',sans-serif;letter-spacing:-.03em;margin-bottom:24px;padding:0 14px">Wish<span style="color:var(--acc)">well</span></div><div style="font:600 10px/1 'Public Sans';letter-spacing:.16em;text-transform:uppercase;color:var(--ink2);padding:0 14px 12px">Your lists</div><a href="#" class="on">My birthday</a><a href="#">Kitchen stuff</a><a href="#">Ellen, age 7</a><a href="#">House things</a><a href="#" style="color:var(--acc);margin-top:10px">+ New list</a></div>
+<div style="flex:1;display:flex;flex-direction:column;min-width:0">
+<div class="paste"><input value="Paste a link, or just type what you want…"><button>Add</button></div>
+<div style="display:flex;align-items:baseline;justify-content:space-between;padding:30px 34px 20px"><div><h2 style="font:700 32px/1 'Bricolage Grotesque',sans-serif;letter-spacing:-.03em">My birthday</h2><p style="font:400 14px/1 'Public Sans';color:var(--ink2);margin-top:11px">5 things · 12 March · shared with 6 people</p></div><span style="font:600 14px/1 'Public Sans';border:1px solid var(--line);border-radius:10px;padding:12px 18px;background:var(--pa)">Copy share link</span></div>
+<div class="erow" style="background:rgba(232,162,74,.05)"><span class="grip">⋮⋮</span><div class="noimg" style="height:68px;font-size:15px;border-radius:10px">no photo</div><div><h4>Wool socks, any colour</h4><small>Size 38–39. The thick ribbed kind.</small></div><span class="want" style="justify-self:start;margin:0;font-size:9px;padding:7px 10px">Really wants</span><span style="color:#4d3f32">···</span></div>
+<div class="erow"><span class="grip">⋮⋮</span><div class="ph" style="height:68px;border-radius:10px"><i>PHOTO</i></div><div><h4>Cast iron skillet, 26 cm</h4><small>649 kr · fra-kokkenet.dk</small></div><span style="font:400 13px/1 'Public Sans';color:var(--ink2)">Add priority</span><span style="color:#4d3f32">···</span></div>
+<div class="erow"><span class="grip">⋮⋮</span><div class="ph" style="height:68px;border-radius:10px"><i>PHOTO</i></div><div><h4>Speckled ceramic mug</h4><small>180 kr · the pale grey one</small></div><span style="font:400 13px/1 'Public Sans';color:var(--ink2)">Add priority</span><span style="color:#4d3f32">···</span></div>
+<div class="erow"><span class="grip">⋮⋮</span><div class="noimg" style="height:68px;font-size:15px;border-radius:10px">no photo</div><div><h4>A poetry collection</h4><small>Any of hers I don't have — ask Mum, she knows.</small></div><span style="font:400 13px/1 'Public Sans';color:var(--ink2)">Add priority</span><span style="color:#4d3f32">···</span></div>
+<div class="erow"><span class="grip">⋮⋮</span><div class="ph" style="height:68px;border-radius:10px"><i>PHOTO</i></div><div><h4>Gardening gloves</h4><small>Medium. Leather palms if possible.</small></div><span style="font:400 13px/1 'Public Sans';color:var(--ink2)">Add priority</span><span style="color:#4d3f32">···</span></div>
+</div></div></div>
+
+<!-- ══════════ D4 · RIBBON ══════════ -->
+<div class="frame d4" style="left:80px;top:3470px;width:480px;height:844px;border-radius:6px"><span class="cap">04 · Storybook</span>
+<div class="idt">
+<div class="row"><div class="wm">Ribbon</div><p style="font:400 17px/1.5 Gabarito;color:var(--ink2);max-width:340px">The quiet year-round symbol of a gift. Deep plum, terracotta and mustard; thick ink outlines and a hard shadow, like a picture book printed properly.</p></div>
+<div class="row"><div class="lbl">Type</div><div style="font:700 34px/1.1 Petrona,serif;color:#5c2246">Petrona Bold</div><div style="font:500 15px/1.4 Gabarito;color:var(--ink2)">Gabarito · body and UI</div></div>
+<div class="row"><div class="lbl">Light — default</div><div class="sw"><i style="background:#fbf3e8"></i><i style="background:#fdf1d8"></i><i style="background:#e0a02c"></i><i style="background:#c2452f"></i><i style="background:#5c2246"></i><i style="background:#3d1f33"></i></div><div class="lbl" style="margin-top:6px">Dark — evening</div><div class="sw"><i style="background:#241120"></i><i style="background:#33182c"></i><i style="background:#5c2246"></i><i style="background:#e0a02c"></i><i style="background:#e4674f"></i><i style="background:#fbf3e8"></i></div></div>
+<div class="row"><div class="lbl">Warmth comes from</div><p style="font:400 16px/1.6 Gabarito;color:var(--ink2)">Saturation and weight. Plum fills the header edge to edge; cards sit on it with a solid ink outline and offset shadow. Playful in shape, grown-up in colour.</p></div>
+</div></div>
+
+<div class="frame phone d4" style="left:620px;top:3470px"><span class="cap">Giver · shared link</span>
+<div class="scr">
+<div class="bar"><b>Ribbon</b><span>Shared by Sofie</span></div>
+<div class="gh"><h2>Sofie's birthday</h2><p>A few things I'd love. No rush, no pressure — just hints.</p></div>
+<div class="card hi"><span class="want">Really wants this</span><div class="noimg">Wool socks</div><h3>Wool socks, any colour</h3><div class="note"><b>Note</b><p>Size 38–39. The thick ribbed kind.</p></div></div>
+<div class="card"><div class="ph" style="height:132px"><i>PRODUCT PHOTO<br>cast iron skillet 26 cm</i></div><h3>Cast iron skillet, 26 cm</h3><div class="price">About 649 kr</div><a class="shop" href="#">See it in the shop</a></div>
+</div></div>
+
+<div class="frame phone d4" style="left:1060px;top:3470px"><span class="cap">Owner · my lists</span>
+<div class="scr">
+<div class="bar"><b>Ribbon</b><span>Sofie</span></div>
+<div class="gh" style="padding-bottom:20px"><h2>Your lists</h2><p>Four on the go.</p></div>
+<div style="height:18px"></div>
+<div class="lrow"><div><h4>My birthday</h4><p>5 things · shared with 6 people</p></div><span style="color:var(--acc);font-size:20px">→</span></div>
+<div class="lrow"><div><h4>Kitchen stuff</h4><p>11 things · not shared yet</p></div><span style="color:var(--acc);font-size:20px">→</span></div>
+<div class="lrow"><div><h4>Ellen, age 7</h4><p>8 things · shared with 9 people</p></div><span style="color:var(--acc);font-size:20px">→</span></div>
+<div class="lrow"><div><h4>House things</h4><p>Nothing here yet</p></div><span style="color:var(--acc);font-size:20px">→</span></div>
+<div style="padding:6px 20px"><a class="shop" href="#" style="margin:0;background:var(--acc2);color:#3d1f33">Start a new list</a></div>
+</div></div>
+
+<div class="frame desk d4" style="left:1500px;top:3492px"><span class="cap">Owner · list editor (desktop)</span>
+<div class="scr" style="flex-direction:row">
+<div class="side"><div style="font:700 26px/1 Petrona,serif;margin-bottom:24px;padding:0 14px">Ribbon</div><div style="font:600 10px/1 Gabarito;letter-spacing:.16em;text-transform:uppercase;color:#c39cb5;padding:0 14px 12px">Your lists</div><a href="#" class="on">My birthday</a><a href="#">Kitchen stuff</a><a href="#">Ellen, age 7</a><a href="#">House things</a><a href="#" style="color:var(--acc2);margin-top:10px">+ New list</a></div>
+<div style="flex:1;display:flex;flex-direction:column;min-width:0;background:var(--bg)">
+<div class="paste"><input value="Paste a link, or just type what you want…"><button>Add</button></div>
+<div style="display:flex;align-items:baseline;justify-content:space-between;padding:28px 34px 20px"><div><h2 style="font:700 34px/1 Petrona,serif;color:#5c2246">My birthday</h2><p style="font:400 14px/1 Gabarito;color:var(--ink2);margin-top:11px">5 things · 12 March · shared with 6 people</p></div><span style="font:600 14px/1 Gabarito;border:2px solid #3d1f33;border-radius:12px;padding:12px 18px;background:#fff">Copy share link</span></div>
+<div class="erow" style="background:#fff6e4"><span class="grip">⋮⋮</span><div class="noimg" style="height:68px;font-size:15px;border-radius:10px">no photo</div><div><h4>Wool socks, any colour</h4><small>Size 38–39. The thick ribbed kind.</small></div><span class="want" style="justify-self:start;margin:0;font-size:9px;padding:7px 10px">Really wants</span><span style="color:#c8b3a0">···</span></div>
+<div class="erow"><span class="grip">⋮⋮</span><div class="ph" style="height:68px;border-radius:10px"><i>PHOTO</i></div><div><h4>Cast iron skillet, 26 cm</h4><small>649 kr · fra-kokkenet.dk</small></div><span style="font:400 13px/1 Gabarito;color:var(--ink2)">Add priority</span><span style="color:#c8b3a0">···</span></div>
+<div class="erow"><span class="grip">⋮⋮</span><div class="ph" style="height:68px;border-radius:10px"><i>PHOTO</i></div><div><h4>Speckled ceramic mug</h4><small>180 kr · the pale grey one</small></div><span style="font:400 13px/1 Gabarito;color:var(--ink2)">Add priority</span><span style="color:#c8b3a0">···</span></div>
+<div class="erow"><span class="grip">⋮⋮</span><div class="noimg" style="height:68px;font-size:15px;border-radius:10px">no photo</div><div><h4>A poetry collection</h4><small>Any of hers I don't have — ask Mum, she knows.</small></div><span style="font:400 13px/1 Gabarito;color:var(--ink2)">Add priority</span><span style="color:#c8b3a0">···</span></div>
+<div class="erow"><span class="grip">⋮⋮</span><div class="ph" style="height:68px;border-radius:10px"><i>PHOTO</i></div><div><h4>Gardening gloves</h4><small>Medium. Leather palms if possible.</small></div><span style="font:400 13px/1 Gabarito;color:var(--ink2)">Add priority</span><span style="color:#c8b3a0">···</span></div>
+</div></div></div>
+
+</body>
+</html>
