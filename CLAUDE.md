@@ -42,6 +42,8 @@ Migrations are **forward-only** (D1 has no down-migrations; `wrangler rollback` 
 ## Architecture notes (the non-obvious bits)
 
 - `wrangler.jsonc` is the source of truth for bindings. The D1 binding is `DB` (database name `wishlist-db` — migration commands use the *name*, not the binding).
+- UI lives in `src/components/` (Hono JSX ports of the design system) and `src/pages/`; all styling is one global `src/styles.css` (the Hinted tokens — don't invent new colors/sizes, use the tokens). Fonts are self-hosted in `public/fonts/` (OFL-licensed; no Google Fonts requests).
+- Public list URLs are `/l/:slug` (22-char base64url, unguessable — the URL is the share model) and carry `X-Robots-Tag: noindex`.
 - After changing `wrangler.jsonc`, run `pnpm cf-typegen` to regenerate `worker-configuration.d.ts` (gitignored; `pnpm typecheck` also regenerates it).
 - The dev server's D1 lives in `.wrangler/state/`. **Tests do NOT share it** — each test file gets a fresh, isolated D1 with migrations applied by `test/apply-migrations.ts`.
 - `src/db/index.ts#createDb` constructs Drizzle per request. Never cache DB handles (or any request state) in module scope — Workers isolate reuse is an optimization, not a guarantee.
