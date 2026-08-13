@@ -62,14 +62,17 @@ Scaffold (Workers + Hono + D1 + Drizzle + Vitest-in-workerd + Biome), deploy pip
 
 **Exit criteria:** repeat giver visits are cache hits; an edit is visible on the next request; Lighthouse ≥ 95 across the board on the giver page.
 
-## Phase 5 — Move-in day
+## Phase 5 — Move-in day (rescoped 2026-08-14)
 
-**Scope**
-- Domain: the app lives at **wishlist.season4.app** (user's existing domain; decided 2026-08-14 — a dedicated hinted.* domain stays optional later). Custom-domain routing lands as soon as the zone move to Cloudflare completes; revisit branding polish here.
-- Onboard the actual family; watch real usage; fix the papercuts they hit.
-- Operations drill: D1 Time Travel restore rehearsal, `wrangler rollback` rehearsal, decide alerting (or deliberately none).
+**Scope** — the user decided to run solo-owner for now: one owner account (Mick), the family participates purely as account-less givers via share links — which is the product's core asymmetric design doing its job. So Phase 5 is operational readiness, not onboarding:
+- Domain: live at **wishlist.season4.app** ✅ (delegation-bridge records at Porkbun to be deleted after ~2026-08-16).
+- Ops runbook (`docs/runbook.md`): rollback, D1 Time Travel restore, adding a future owner, email destinations, R2 notes.
+- Drills: capture a Time Travel bookmark + document restore; rollback rehearsal.
+- Alerting: deliberately none (healthz exists; family-scale).
+- Watch real usage; fix papercuts as they surface.
+- (Family owner accounts: two documented commands away, whenever wanted.)
 
-**Exit criteria:** the family is using it for a real occasion without help.
+**Exit criteria:** the owner uses it for a real occasion; the runbook exists and its commands are verified.
 
 ## Later / explicitly parked
 
