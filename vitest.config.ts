@@ -14,7 +14,8 @@ export default defineConfig(async () => {
       cloudflareTest({
         wrangler: { configPath: "./wrangler.jsonc" },
         miniflare: {
-          bindings: { TEST_MIGRATIONS: migrations },
+          // DEV_EXPOSE_OTP is the test-only auth seam — never set outside tests.
+          bindings: { TEST_MIGRATIONS: migrations, DEV_EXPOSE_OTP: "1" },
         },
       }),
     ],
