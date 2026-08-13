@@ -7,10 +7,15 @@
 
 const EDGE_TTL_SECONDS = 30 * 24 * 60 * 60;
 
-// Synthetic, non-routable key URL — never collides with real requests.
+const BUILD = typeof __BUILD_ID__ === "undefined" ? "dev" : __BUILD_ID__;
+
+// Synthetic, non-routable key URL — never collides with real requests. The
+// build id means deploys start with a fresh cache (template changes ship
+// immediately); the updatedAt validator handles content changes between
+// deploys.
 export function listCacheKey(slug: string, updatedAt: Date): Request {
   return new Request(
-    `https://edge-cache.hinted.internal/l/${slug}@${Math.floor(updatedAt.getTime() / 1000)}`,
+    `https://edge-cache.hinted.internal/${BUILD}/l/${slug}@${Math.floor(updatedAt.getTime() / 1000)}`,
   );
 }
 
