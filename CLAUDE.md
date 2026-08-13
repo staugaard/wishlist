@@ -49,7 +49,7 @@ Migrations are **forward-only** (D1 has no down-migrations; `wrangler rollback` 
 - `src/db/index.ts#createDb` constructs Drizzle per request. Never cache DB handles (or any request state) in module scope — Workers isolate reuse is an optimization, not a guarantee.
 - JSX is `hono/jsx` (configured in tsconfig) — server-side only. Client JS goes in `src/client.ts`, bundled by Vite, injected via `<Script>` in `src/renderer.tsx`. Client-side HMR is real; server JSX changes are fast full-module reloads.
 - Integration tests call `exports.default.fetch(url)` (from `cloudflare:workers`); unit tests use `env` bindings directly. Both run inside real workerd — no mocks for platform APIs.
-- Auth is hand-rolled email OTP (`src/routes/auth.tsx`, `src/lib/session.ts`). Locally (no `RESEND_API_KEY`) the code is logged to the dev-server console. `DEV_EXPOSE_OTP=1` is a **test-only** binding set in `vitest.config.ts` that surfaces the code in an `X-Dev-Otp` header — never set it in wrangler.jsonc or production.
+- Auth is hand-rolled email OTP (`src/routes/auth.tsx`, `src/lib/session.ts`). Login emails go through the Cloudflare Email Service `EMAIL` binding (from `hinted@season4.app` — the domain must stay onboarded to Email Sending). In dev builds the code is logged to the dev-server console instead of sent. `DEV_EXPOSE_OTP=1` is a **test-only** binding set in `vitest.config.ts` that surfaces the code in an `X-Dev-Otp` header — never set it in wrangler.jsonc or production.
 - Adding a family member (no invite UI, by design): `pnpm exec wrangler d1 execute wishlist-db --remote --command "INSERT INTO users (email, name, created_at) VALUES ('them@example.com', 'Their Name', unixepoch())"`
 
 ## Don'ts

@@ -65,7 +65,7 @@ Scaffold (Workers + Hono + D1 + Drizzle + Vitest-in-workerd + Biome), deploy pip
 ## Phase 5 — Move-in day
 
 **Scope**
-- Real domain (name is Hinted — domain candidates: hinted.family / hinted.gift / getting creative), custom-domain routing, wordmark-in-tab polish.
+- Domain: the app lives at **wishlist.season4.app** (user's existing domain; decided 2026-08-14 — a dedicated hinted.* domain stays optional later). Custom-domain routing lands as soon as the zone move to Cloudflare completes; revisit branding polish here.
 - Onboard the actual family; watch real usage; fix the papercuts they hit.
 - Operations drill: D1 Time Travel restore rehearsal, `wrangler rollback` rehearsal, decide alerting (or deliberately none).
 
@@ -84,3 +84,4 @@ Kid profiles managed by a parent · family-space browsing (grouping, not access)
 | Owner auth: hand-rolled passwordless email code + D1 sessions | ✅ 2026-08-13 — ranked first by research (~250 LOC, zero deps, UX identical to library OTP). Runners-up: Cloudflare Access (needs custom domain), Better Auth (more glue than hand-rolling). Passkeys possible later as an optional add-on, never the only door |
 | Slug format, font hosting, CSS delivery | Phase 1 spec |
 | Reorder interaction on mobile | Phase 2 spec |
+| Email via Cloudflare Email Service (no Resend); domain = wishlist.season4.app | ✅ 2026-08-14 |
